@@ -1,4 +1,4 @@
-name: Merge to Master and Publish Release
+name: Create Release
 
 on:
   push:
@@ -9,27 +9,25 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-    - name: Install 7-Zip
-      uses: warrenbuckley/Setup-7Zip@v1.0.0
-    - name: Compress to ZIP
-      run: 7z a -r -tzip $(mktemp -u).zip .
+    - uses: actions/checkout@v2
+
+    # Build your application here
+    
+    - name: Compress files and folders
+      run: |
+        zip -r archive.zip <file1> <folder1> <folder2>
+
     - name: Create Release
-      id: create_release
       uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.sha }}
-        release_name: Release ${{ github.sha }}
+        tag_name: v1.0.0
+        release_name: Release 1.0.0
+        body: This is the first release of my application.
         draft: false
         prerelease: false
+
     - name: Upload Release Asset
-      id: upload-release-asset
       uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./archive.zip
