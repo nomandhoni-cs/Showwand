@@ -9,27 +9,30 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    # Build your application here
-    
-    - name: Compress files and folders
-      run: |
-        zip -r showwand.zip popup.html options.html manifest.json style assets js
+      # Build your application here
 
-    - name: Create Release
-      uses: actions/create-release@v1
-      with:
-        tag_name: v1.0.0
-        release_name: Release 1.0.0
-        body: This is the first release of my application.
-        draft: false
-        prerelease: false
+      - name: Compress files and folders
+        run: |
+          zip -r showwand.zip popup.html options.html manifest.json style assets js
 
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./archive.zip
-        asset_name: archive.zip
-        asset_content_type: application/zip
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: v1.0.0
+          release_name: Release 1.0.0
+          body: This is the first release of my application.
+          draft: false
+          prerelease: false
+          token: ${{ secrets.MY_TOKEN }}
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./showwand.zip
+          asset_name: showwand.zip
+          asset_content_type: application/zip
+          token: ${{ secrets.MY_TOKEN }}
