@@ -15,7 +15,7 @@ jobs:
     
     - name: Compress files and folders
       run: |
-        zip -r archive.zip file1 folder1 folder2
+        zip -r showwand.zip popup.html options.html manifest.json style assets js
 
     - name: Create Release
       uses: actions/create-release@v1
