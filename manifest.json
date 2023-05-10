@@ -1,0 +1,12 @@
+{
+    "name": "Showwand",
+    "description": "A magical Browser extension, which directly post, delete in your Showwcase thread.",
+    "version": "1.0",
+    "manifest_version": 3,
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "activeTab"
+    ]
+}
