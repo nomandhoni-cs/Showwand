@@ -16,7 +16,6 @@ jobs:
       - name: Compress files and folders
         run: |
           zip -r showwand.zip popup.html options.html manifest.json style assets js
-
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -26,7 +25,7 @@ jobs:
           body: This is the first release of my application.
           draft: false
           prerelease: false
-          token: ${{ secrets.MY_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -35,4 +34,4 @@ jobs:
           asset_path: ./showwand.zip
           asset_name: showwand.zip
           asset_content_type: application/zip
-          token: ${{ secrets.MY_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
