@@ -1,37 +1,21 @@
-name: Create Release
-
+name: MasterDeployCI
 on:
   push:
     branches:
       - master
-
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      # Build your application here
-
-      - name: Compress files and folders
-        run: |
-          zip -r showwand.zip popup.html options.html manifest.json style assets js
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v1.0.0
-          release_name: Release 1.0.0
-          body: This is the first release of my application.
-          draft: false
-          prerelease: false
-          token: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./showwand.zip
-          asset_name: showwand.zip
-          asset_content_type: application/zip
-          token: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/checkout@v1
+    - name: Create Release Folder
+      run: rsync -arv --exclude='.git/' --exclude='.github/' --exclude='.gitignore' . ./release
+    - name: Switch to Release Folder
+      run: |
+        cd release
+        ls -la
+    - name: Bump version and push tag
+      uses: anothrNick/github-tag-action@master
+      env:
+        GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
+        REPO_OWNER: nomandhoni-cs
