@@ -1,4 +1,16 @@
 body{
     width: 400px;
     height: 600px;
+    background: linear-gradient(0deg, #131720, #131720), linear-gradient(155.03deg, rgba(255, 255, 255, 0.06) 14.73%, rgba(255, 255, 255, 0) 64.1%);
+    background-blend-mode: normal, lighten;
+    color: aliceblue;
+}
+.create-post{
+    display: block;
+}
+.posts-block{
+    display: none;
+}
+.setting-block{
+    display: none;
 }

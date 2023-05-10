@@ -9,22 +9,37 @@
 </head>
 <body>
     <div class="container">
-        <input type="text" placeholder="Post title" id="post-title">
-        <textarea placeholder="Post description" id="post-description"></textarea>
-        <button id="post-submit-btn">Post</button>
-        <button id="setting-btn">Settings</button>
+        <nav>
+            <!-- Create Posts, Posts List, Setting-->
+            
+                <button><a href="#" id="create-post-btn" >Create Post</a></button>
+                <button><a href="#" id="posts-list-btn" >Posts List</a></button>
+                <button><a href="#" id="setting-btn" >Settings</a></button>
+            
+        </nav>
+       <div class="block create-post-block">
+            <input type="text" placeholder="Post title" id="post-title">
+            <br>
+            <textarea placeholder="Post description" id="post-description"></textarea>
+            <br>
+            <button id="post-submit-btn">Post</button>
+       </div>
+       <div class="block posts-block">
+        <!-- Posts List  -->
+        <h3>Posts</h3>
+       </div>
+       <div class="block setting-block">
+        <!-- Modal to enter API key -->
+            <div class="modal" id="api-key-modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <h2>Enter your Showwcase API key</h2>
+                    <input type="text" id="api-key-input" placeholder="API Key">
+                    <button id="save-api-key-btn">Save</button>
+                </div>
+            </div>
+       </div>
     </div>
-
-    <!-- Modal to enter API key -->
-    <div class="modal" id="api-key-modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Enter your Showwcase API key</h2>
-            <input type="text" id="api-key-input" placeholder="API Key">
-            <button id="save-api-key-btn">Save</button>
-        </div>
-    </div>
-
     <script src="js/script.js"></script>
 </body>
 </html>
