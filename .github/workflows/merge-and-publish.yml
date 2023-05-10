@@ -26,7 +26,7 @@ jobs:
           body: This is the first release of my application.
           draft: false
           prerelease: false
-          token: ${{ secrets.MY_TOKEN }}
+          token: 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
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -35,4 +35,4 @@ jobs:
           asset_path: ./showwand.zip
           asset_name: showwand.zip
           asset_content_type: application/zip
-          github_token: ${{ secrets.MY_TOKEN }}
+          github_token: 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
