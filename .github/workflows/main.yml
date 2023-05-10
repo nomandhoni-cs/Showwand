@@ -1,37 +1,20 @@
-name: Create Release
-
+name: Release
 on:
   push:
-    branches:
-      - master
-
+    tags:
+      - '*'
 jobs:
-  build:
+  release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-
-      # Build your application here
-
-      - name: Compress files and folders
-        run: |
-          zip -r showwand.zip popup.html options.html manifest.json style assets js
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - uses: actions/checkout@master
+      - name: Create Archive Release
+        uses: nomandhoni-cs/Showwand@master
         with:
-          tag_name: v1.0.0
-          release_name: Release 1.0.0
-          body: This is the first release of my application.
-          draft: false
-          prerelease: false
-          token: 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
-
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1
+          filename: 'release.zip'
+          exclusions: '*.git*'
+      - name: Upload Release
+        uses:  nomandhoni-cs/Showwand@v1
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./showwand.zip
-          asset_name: showwand.zip
-          asset_content_type: application/zip
+          artifacts: 'release.zip'
           token: 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
