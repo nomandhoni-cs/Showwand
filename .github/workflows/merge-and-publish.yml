@@ -15,7 +15,7 @@ jobs:
     
     - name: Compress files and folders
       run: |
-        zip -r archive.zip <file1> <folder1> <folder2>
+        zip -r archive.zip file1 folder1 folder2
 
     - name: Create Release
       uses: actions/create-release@v1
