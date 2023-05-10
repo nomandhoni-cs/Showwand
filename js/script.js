@@ -87,3 +87,31 @@ getCurrentUrl()
     .catch(error => {
         console.error(error);
     });
+
+    const createPostBtn = document.getElementById('create-post-btn');
+    const postsListBtn = document.getElementById('posts-list-btn');
+    const settingBtn = document.getElementById('setting-btn');
+    // Dynamically render
+    function renderBlock(blockOrder){
+        const blocks = document.getElementsByClassName('block');
+        for (let i = 0; i < blocks.length; i++) {
+            if (i == blockOrder) {
+                blocks[i].style.display = 'block';
+            } else {
+                blocks[i].style.display = 'none';
+            }
+        }
+
+    }
+    
+    createPostBtn.addEventListener('click', () => {
+      renderBlock(0);
+    });
+    
+    postsListBtn.addEventListener('click', () => {
+      renderBlock(1);
+    });
+    
+    settingBtn.addEventListener('click', () => {
+      renderBlock(2);
+    });
