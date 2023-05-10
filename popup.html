@@ -12,8 +12,19 @@
         <input type="text" placeholder="Post title" id="post-title">
         <textarea placeholder="Post description" id="post-description"></textarea>
         <button id="post-submit-btn">Post</button>
+        <button id="setting-btn">Settings</button>
     </div>
-    <button id="setting">Setting</button>
+
+    <!-- Modal to enter API key -->
+    <div class="modal" id="api-key-modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Enter your Showwcase API key</h2>
+            <input type="text" id="api-key-input" placeholder="API Key">
+            <button id="save-api-key-btn">Save</button>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
 </body>
-<script src="js/script.js"></script>
-</html
+</html>

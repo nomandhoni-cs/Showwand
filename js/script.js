@@ -12,14 +12,19 @@ function getCurrentUrl() {
 
 getCurrentUrl()
     .then(url => {
-        const postBtn = document.getElementById('post-submit-btn')
+        const postBtn = document.getElementById('post-submit-btn');
+        const settingBtn = document.getElementById('setting-btn');
+        const apiKeyInput = document.getElementById('api-key-input');
+        const apiKeySavedMsg = document.getElementById('api-key-saved');
+        const apiKeyModal = document.getElementById('api-key-modal');
+        const saveApiKeyBtn = document.getElementById('save-api-key-btn');
 
-        function postFetchFunc(postTitle, postDescription, callback) {
+        function postFetchFunc(postTitle, postDescription, apiKey, callback) {
             fetch('https://cache.showwcase.com/threads', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'x-api-key': '' // Put your api key here
+                    'x-api-key': apiKey
                 },
                 body: JSON.stringify({
                     title: postTitle,
@@ -33,19 +38,52 @@ getCurrentUrl()
             })
             .catch(error => console.error(error));
         }
-        
+
+        function saveApiKey(apiKey) {
+            localStorage.setItem('showwand-api-key', apiKey);
+            apiKeySavedMsg.style.display = 'block';
+            setTimeout(() => {
+                apiKeySavedMsg.style.display = 'none';
+            }, 3000);
+        }
+
+        const savedApiKey = localStorage.getItem('showwand-api-key');
+        if (savedApiKey) {
+            apiKeyInput.value = savedApiKey;
+        }
 
         postBtn.addEventListener('click', () => {
-            const postDescription = document.getElementById('post-description')
-            let fullPostDescription = postDescription.value
-            const postTitle = document.getElementById('post-title')
-            const title = postTitle.value
-            fullPostDescription = fullPostDescription+'\n   '+url
-            postFetchFunc(title, fullPostDescription, ()=>{
-                window.close()
+            const postDescription = document.getElementById('post-description');
+            let fullPostDescription = postDescription.value;
+            const postTitle = document.getElementById('post-title');
+            const title = postTitle.value;
+            fullPostDescription = fullPostDescription + '\n   ' + url;
+            const apiKey = apiKeyInput.value;
+            postFetchFunc(title, fullPostDescription, apiKey, () => {
+                window.close();
             });
-        })
+        });
+
+        settingBtn.addEventListener('click', () => {
+            apiKeyModal.style.display = 'block';
+        });
+
+        saveApiKeyBtn.addEventListener('click', () => {
+            const apiKey = apiKeyInput.value;
+            if (apiKey) {
+                saveApiKey(apiKey);
+                apiKeyModal.style.display = 'none';
+            } else {
+                alert('Please provide an API key.');
+            }
+        });
+
+        apiKeyModal.addEventListener('click', (event) => {
+            if (event.target == apiKeyModal) {
+                apiKeyModal.style.display = 'none';
+            }
+        });
     })
     .catch(error => {
-        console.error(error)
+        console.error(error);
     });
