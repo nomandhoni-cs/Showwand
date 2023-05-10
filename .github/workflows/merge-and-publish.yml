@@ -15,7 +15,7 @@ jobs:
         cd release
         ls -la
     - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@master
+      uses: nomandhoni-cs/Showwand@master
       env:
         GITHUB_TOKEN: ${{ secrets.MY_TOKEN }}
         REPO_OWNER: nomandhoni-cs
