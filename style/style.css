@@ -1,10 +1,84 @@
+*{
+    margin: 0;
+    padding: 0;
+}
 body{
     width: 400px;
     height: 600px;
-    background: linear-gradient(0deg, #131720, #131720), linear-gradient(155.03deg, rgba(255, 255, 255, 0.06) 14.73%, rgba(255, 255, 255, 0) 64.1%);
+    background: #171718;
+    font-size: 14px;
     background-blend-mode: normal, lighten;
     color: aliceblue;
 }
+
+.nav-btn {
+    display: flex;
+    justify-content: space-around;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.25), 0px 4px 16px -4px rgba(0, 0, 0, 0.3);
+    border-radius: 4px;
+    background: #202021;
+}
+.nav-btn div{
+    position: relative;
+    padding: 15px 20px;
+    color: #999;
+    transition: .3s ease-in-out;
+}
+.nav-btn div > svg {
+    width: 13px;
+    height: auto;
+    top: 1px;
+    right: 4px;
+    position: relative;
+}
+.nav-btn div::after {
+    content: "";
+    position: absolute;
+    width: 2px;
+    height: 19px;
+    background: #666;
+    right: -10px;
+    top: 54%;
+    transform: translateY(-50%);
+}
+/* last item after delete */
+.nav-btn div:last-child::after{
+    display: none;
+}
+.nav-btn div:hover, .nav-btn div:active{
+    background: #2e2e2f;
+    color: #fff;
+    cursor: pointer;
+}
+/* settting */
+.modal-content h2 {
+    text-align: center;
+    padding-bottom: 18px;
+    font-weight: 800;
+    font-size: 22px;
+}
+input#api-key-input {
+    padding: 8px 10px;
+    background: transparent;
+    color: #999;
+    width: 73%;
+    margin-left: 6px;
+    border: 1px dotted;
+    border-radius: 7px;
+}
+button#save-api-key-btn {
+    background: transparent;
+    outline: none;
+    border: 1px solid #666;
+    border-radius: 8px;
+    color: aliceblue;
+    padding: 8px 16px;
+    margin-left: 8px;
+}
+#save-api-key-btn:hover{
+    background-color: #666;
+}
+/* setting */
 .create-post{
     display: block;
 }
