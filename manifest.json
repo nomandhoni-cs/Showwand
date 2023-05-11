@@ -1,37 +1,34 @@
 {
-    "name": "Showwand",
-    "description": "A magical Browser extension, which directly post, delete in your Showwcase thread.",
-    "version": "1.0",
-    "manifest_version": 3,
-    "icons": {
-      "16": "assets/icon16.png",
-      "32": "assets/icon32.png",
-      "48": "assets/icon48.png",
-      "128": "assets/icon128.png"
-    },
-    "action": {
-      "default_popup": "popup.html"
-    },
-    "permissions": [
-      "activeTab"
-    ],
-    "options_ui": {
-      "page": "options.html",
-      "open_in_tab": true
-    },
-    "content_scripts": [
-      {
-        "matches": ["http://*/*", "https://*/*"],
-        "js": ["js/content.js"],
-        "run_at": "document_end"
-      }
-    ],
-    "context_menus": {
-      "showwand": {
-        "title": "Post in Showwcase",
-        "contexts": ["selection"],
-        "onclick": "handleSelection"
-      }
+  "name": "Showwand",
+  "description": "A magical Browser extension, which directly post, delete in your Showwcase thread.",
+  "version": "0.5.0",
+  "manifest_version": 3,
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "contextMenus",
+    "storage"
+  ],
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["js/content.js"],
+      "run_at": "document_end"
     }
+  ],
+  "background": {
+    "service_worker": "js/background.js"
   }
-  
+}

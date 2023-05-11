@@ -15,7 +15,6 @@ getCurrentUrl()
         const postBtn = document.getElementById('post-submit-btn');
         const settingBtn = document.getElementById('setting-btn');
         const apiKeyInput = document.getElementById('api-key-input');
-        const apiKeySavedMsg = document.getElementById('api-key-saved');
         const apiKeyModal = document.getElementById('api-key-modal');
         const saveApiKeyBtn = document.getElementById('save-api-key-btn');
 
@@ -40,17 +39,19 @@ getCurrentUrl()
         }
 
         function saveApiKey(apiKey) {
-            localStorage.setItem('showwand-api-key', apiKey);
-            apiKeySavedMsg.style.display = 'block';
-            setTimeout(() => {
-                apiKeySavedMsg.style.display = 'none';
-            }, 3000);
-        }
-
-        const savedApiKey = localStorage.getItem('showwand-api-key');
-        if (savedApiKey) {
-            apiKeyInput.value = savedApiKey;
-        }
+            chrome.storage.local.set({ "showwand-api-key": apiKey }, function() {
+              saveApiKeyBtn.innerText = 'Saved';
+              setTimeout(() => {
+                saveApiKeyBtn.innerText = 'Save';
+              }, 3000);
+            });
+          }
+          
+          const savedApiKey = chrome.storage.local.get("showwand-api-key", function(data) {
+            if (data["showwand-api-key"]) {
+              apiKeyInput.value = data["showwand-api-key"];
+            }
+          });
 
         postBtn.addEventListener('click', () => {
             const postDescription = document.getElementById('post-description');
@@ -60,6 +61,10 @@ getCurrentUrl()
             fullPostDescription = fullPostDescription + '\n   ' + url;
             const apiKey = apiKeyInput.value;
             postFetchFunc(title, fullPostDescription, apiKey, () => {
+            if (!apiKey) {
+                alert('Please provide an Showwcase API key from Settings Option.');
+                return;
+            }
                 window.close();
             });
         });
@@ -72,7 +77,7 @@ getCurrentUrl()
             const apiKey = apiKeyInput.value;
             if (apiKey) {
                 saveApiKey(apiKey);
-                apiKeyModal.style.display = 'none';
+                console.log('API key saved.');
             } else {
                 alert('Please provide an API key.');
             }
