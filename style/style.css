@@ -149,6 +149,14 @@ textarea::-webkit-scrollbar {
     transform: rotate(45deg);
 }
 /* content */
+/* posts start*/
+.post-message {
+    padding: 10px 15px;
+    cursor: pointer;
+}
+/* posts end*/
+
+
 /* setting */
 .create-post{
     display: block;

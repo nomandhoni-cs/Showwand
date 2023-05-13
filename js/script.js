@@ -6,6 +6,7 @@ const createPostBtn = document.getElementById("create-post-btn");
 const postsListBtn = document.getElementById("posts-list-btn");
 const settingBtn = document.getElementById("setting-btn");
 let userInformationFromNotification = "";
+let isPostLoaded = false;
 function getCurrentUrl() {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -149,7 +150,7 @@ saveApiKeyBtn.addEventListener("click", () => {
   const apiKey = apiKeyInput.value;
   if (apiKey) {
     saveApiKey(apiKey);
-	fetchUserInfo(apiKey);
+	  fetchUserInfo(apiKey);
     console.log("API key saved.");
   } else {
     alert("Please provide an API key.");
@@ -167,14 +168,17 @@ function fetchPostsList() {
 		})
 		.then((data) => {
 			const posts = data;
-			posts.forEach((post) => {
-				console.log(post);
-				// Insert every post message into the postsList div
-				const postMessage = document.createElement("div");
-				postMessage.classList.add("post-message");
-				postMessage.innerHTML = post.message;
-				postsList.appendChild(postMessage);
-			});
+      if(isPostLoaded == false){
+        posts.forEach((post) => {
+          console.log(post);
+          // Insert every post message into the postsList div
+          const postMessage = document.createElement("div");
+          postMessage.classList.add("post-message");
+          postMessage.innerHTML = post.message;
+          postsList.appendChild(postMessage);
+        });
+        isPostLoaded = true;
+      }
 		})
 		.catch((error) => {
 			console.error("There was a problem with the fetch operation:", error);
