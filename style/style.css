@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
 *{
     margin: 0;
     padding: 0;
@@ -6,6 +7,7 @@ body{
     width: 400px;
     height: 600px;
     background: #171718;
+    font-family: 'Inter', sans-serif;
     font-size: 14px;
     background-blend-mode: normal, lighten;
     color: aliceblue;
@@ -45,10 +47,14 @@ body{
 .nav-btn div:last-child::after{
     display: none;
 }
-.nav-btn div:hover, .nav-btn div:active{
+.nav-btn div:hover{
     background: #2e2e2f;
     color: #fff;
     cursor: pointer;
+}
+.nav-btn div.active{
+    background: #2e2e2f;
+    color: #fff;
 }
 /* settting */
 .modal-content h2 {
@@ -61,7 +67,7 @@ input#api-key-input {
     padding: 8px 10px;
     background: transparent;
     color: #999;
-    width: 73%;
+    width: 70%;
     margin-left: 6px;
     border: 1px dotted;
     border-radius: 7px;
@@ -78,6 +84,71 @@ button#save-api-key-btn {
 #save-api-key-btn:hover{
     background-color: #666;
 }
+/* content */
+.content{
+    padding: 30px 0;
+}
+.block.create-post-block {
+    padding: 30px 25px;
+    margin: 10px;
+    border: 1px solid #434040;
+    border-radius: 7px;
+}
+.content textarea#post-title{
+    background: transparent;
+    border: none;
+    font-size: 17px;
+    font-weight: 600;
+    outline: none;
+    border-radius: 7px;
+    color: #fff;
+    resize: none;
+    width: 340px;
+    height: 35px;
+    margin-bottom: 20px;
+}
+.content textarea#post-title::placeholder{
+    color: #999;
+}
+textarea#post-description{
+    width: 100%;
+    height: 230px;
+    font-size: 16px;
+    line-height: 25px;
+    color: #fff;
+    background: transparent;
+    border: none;
+    outline: none;
+    resize: none;
+    margin-bottom: 20px;
+}
+textarea::-webkit-scrollbar {
+    display: none;
+}
+#post-submit-btn {
+    height: 35px;
+    line-height: 35px;
+    display: block;
+    padding: 0 30px;
+    border:transparent;
+    border-radius: 7px;
+    margin-top: 20px;
+    transition: .3s ease-in-out;
+}
+#post-submit-btn:hover{
+    background-color: #666;
+    color: #fff;
+    cursor: pointer;
+}
+#post-submit-btn svg {
+    width: 16px;
+    height: 16px;
+    position: relative;
+    right: 5px;
+    top: 1px;
+    transform: rotate(45deg);
+}
+/* content */
 /* setting */
 .create-post{
     display: block;
