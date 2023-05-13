@@ -91,22 +91,27 @@ function postFetchFunc(title, description, url, apiKey, callback) {
 
 // Post btn event listener
 postBtn.addEventListener("click", () => {
-  const postTitle = document.getElementById("post-title").value;
-  const postDescription = document.getElementById("post-description").value;
-  const apiKey = apiKeyInput.value;
-  const urlCheckbox = document.getElementById("url-checkbox");
-  if (urlCheckbox && urlCheckbox.checked) {
-    getCurrentUrl()
-      .then((url) => {
-        postFetchFunc(postTitle, postDescription, url, apiKey);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  } else {
-    postFetchFunc(postTitle, postDescription, "", apiKey);
-  }
-});
+	const postTitle = document.getElementById("post-title").value;
+	const postDescription = document.getElementById("post-description").value;
+	const apiKey = apiKeyInput.value;
+	const urlCheckbox = document.getElementById("url-checkbox");
+	if (!apiKey) {
+	  alert("Please provide an API key");
+	  return;
+	}
+	if (urlCheckbox && urlCheckbox.checked) {
+	  getCurrentUrl()
+		.then((url) => {
+		  postFetchFunc(postTitle, postDescription, url, apiKey);
+		})
+		.catch((error) => {
+		  console.error(error);
+		});
+	} else {
+	  postFetchFunc(postTitle, postDescription, "", apiKey);
+	}
+  });
+  
 
 // Save API key btn event listener
 saveApiKeyBtn.addEventListener("click", () => {
