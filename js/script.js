@@ -5,6 +5,8 @@ const saveApiKeyBtn = document.getElementById("save-api-key-btn");
 const createPostBtn = document.getElementById("create-post-btn");
 const postsListBtn = document.getElementById("posts-list-btn");
 const settingBtn = document.getElementById("setting-btn");
+let userInformationFromNotification = "";
+let isPostLoaded = false;
 function getCurrentUrl() {
   return new Promise((resolve, reject) => {
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -47,14 +49,14 @@ function renderBlock(blockOrder) {
 }
 // Add .active class to the selected btn
 function addActiveClass(btnOrder) {
-	  const btns = document.getElementsByClassName("all-nav-btn");
-	  for (let i = 0; i < btns.length; i++) {
-	    if (i == btnOrder) {
-	      btns[i].classList.add("active");
-	    } else {
-	      btns[i].classList.remove("active");
-	    }
-	  }
+  const btns = document.getElementsByClassName("all-nav-btn");
+  for (let i = 0; i < btns.length; i++) {
+    if (i == btnOrder) {
+      btns[i].classList.add("active");
+    } else {
+      btns[i].classList.remove("active");
+    }
+  }
 }
 // Fetch function
 function postFetchFunc(title, description, url, apiKey, callback) {
@@ -95,6 +97,10 @@ postBtn.addEventListener("click", () => {
   const postDescription = document.getElementById("post-description").value;
   const apiKey = apiKeyInput.value;
   const urlCheckbox = document.getElementById("url-checkbox");
+  if (!apiKey) {
+    alert("Please provide an API key");
+    return;
+  }
   if (urlCheckbox && urlCheckbox.checked) {
     getCurrentUrl()
       .then((url) => {
@@ -108,17 +114,76 @@ postBtn.addEventListener("click", () => {
   }
 });
 
+// Fetch user info function from Notification
+function fetchUserInfo(apiKey) {
+	fetch("https://cache.showwcase.com/notifications/?limit=1", {
+	  headers: {
+		"Content-Type": "application/json",
+		"x-api-key": apiKey,
+	  },
+	})
+	.then((response) => {
+	  if (!response.ok) {
+		throw new Error("Network response was not ok");
+	  }
+	  return response.json();
+	})
+	.then((data) => {
+		const user = data[0].data.thread.user;
+		const userJson = JSON.stringify(user);
+		chrome.storage.local.set({ "userInfo": userJson });
+
+	})
+	.catch((error) => {
+	  console.error("There was a problem with the fetch operation:", error);
+	});
+  }
+// Save user info to local storage
+chrome.storage.local.get(["userInfo"], function(result) {
+	const userJson = result.userInfo;
+	const user = JSON.parse(userJson);
+	userInformationFromNotification = user;
+	console.log(userInformationFromNotification);
+});
 // Save API key btn event listener
 saveApiKeyBtn.addEventListener("click", () => {
   const apiKey = apiKeyInput.value;
   if (apiKey) {
     saveApiKey(apiKey);
+	  fetchUserInfo(apiKey);
     console.log("API key saved.");
   } else {
     alert("Please provide an API key.");
   }
 });
-
+// Fetch posts list and display them in the id="posts-list" div
+function fetchPostsList() {
+	  const postsList = document.getElementById("posts-list");
+	  fetch(`https://cache.showwcase.com/threads/?username=${userInformationFromNotification.username}&limit=5`)
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error("Network response was not ok");
+			}
+			return response.json();
+		})
+		.then((data) => {
+			const posts = data;
+      if(isPostLoaded == false){
+        posts.forEach((post) => {
+          console.log(post);
+          // Insert every post message into the postsList div
+          const postMessage = document.createElement("div");
+          postMessage.classList.add("post-message");
+          postMessage.innerHTML = post.message;
+          postsList.appendChild(postMessage);
+        });
+        isPostLoaded = true;
+      }
+		})
+		.catch((error) => {
+			console.error("There was a problem with the fetch operation:", error);
+		});
+}
 createPostBtn.addEventListener("click", () => {
   renderBlock(0);
   addActiveClass(0);
@@ -127,6 +192,7 @@ createPostBtn.addEventListener("click", () => {
 postsListBtn.addEventListener("click", () => {
   renderBlock(1);
   addActiveClass(1);
+  fetchPostsList();
 });
 
 settingBtn.addEventListener("click", () => {
