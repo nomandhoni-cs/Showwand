@@ -65,11 +65,18 @@
         </nav>
        <div class="content">
             <div class="block create-post-block">
-                <input type="text" placeholder="Post title" id="post-title">
+                <textarea name="title" maxlength="80" id="post-title" placeholder="Write your Title here"></textarea>
                 <br>
-                <textarea placeholder="Post description" id="post-description"></textarea>
-                <br>
-                <button id="post-submit-btn">Post</button>
+                <textarea name="post-de" id="post-description" placeholder="Start a discussion with the community"></textarea>
+                <input type="checkbox" name="check" id="url-checkbox">
+                <label for="check">Add Current Url</label>
+                <button id="post-submit-btn">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path
+                            d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
+                        </path>
+                    </svg>
+                    Post</button>
             </div>
             <div class="block posts-block">
                 <!-- Posts List  -->
