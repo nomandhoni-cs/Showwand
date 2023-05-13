@@ -45,6 +45,17 @@ function renderBlock(blockOrder) {
     }
   }
 }
+// Add .active class to the selected btn
+function addActiveClass(btnOrder) {
+	  const btns = document.getElementsByClassName("all-nav-btn");
+	  for (let i = 0; i < btns.length; i++) {
+	    if (i == btnOrder) {
+	      btns[i].classList.add("active");
+	    } else {
+	      btns[i].classList.remove("active");
+	    }
+	  }
+}
 // Fetch function
 function postFetchFunc(title, description, url, apiKey, callback) {
   const body = {
@@ -110,12 +121,15 @@ saveApiKeyBtn.addEventListener("click", () => {
 
 createPostBtn.addEventListener("click", () => {
   renderBlock(0);
+  addActiveClass(0);
 });
 
 postsListBtn.addEventListener("click", () => {
   renderBlock(1);
+  addActiveClass(1);
 });
 
 settingBtn.addEventListener("click", () => {
   renderBlock(2);
+  addActiveClass(2);
 });
