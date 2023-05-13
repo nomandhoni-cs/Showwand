@@ -1,132 +1,135 @@
-function getCurrentUrl() {
-	return new Promise((resolve, reject) => {
-		chrome.tabs.query(
-			{ active: true, currentWindow: true },
-			function (tabs) {
-				if (tabs.length === 0) {
-					reject("No active tabs found.");
-				} else {
-					resolve(tabs[0].url);
-				}
-			}
-		);
-	});
-}
-
-getCurrentUrl()
-	.then((url) => {
-		const postBtn = document.getElementById("post-submit-btn");
-		const settingBtn = document.getElementById("setting-btn");
-		const apiKeyInput = document.getElementById("api-key-input");
-		const apiKeyModal = document.getElementById("api-key-modal");
-		const saveApiKeyBtn = document.getElementById("save-api-key-btn");
-
-		function postFetchFunc(postTitle, postDescription, apiKey, callback) {
-			fetch("https://cache.showwcase.com/threads", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"x-api-key": apiKey,
-				},
-				body: JSON.stringify({
-					title: postTitle,
-					message: postDescription,
-				}),
-			})
-				.then((response) => response.json())
-				.then((data) => {
-					console.log(data);
-					callback();
-				})
-				.catch((error) => console.error(error));
-		}
-
-		function saveApiKey(apiKey) {
-			chrome.storage.local.set(
-				{ "showwand-api-key": apiKey },
-				function () {
-					saveApiKeyBtn.innerText = "Saved";
-					setTimeout(() => {
-						saveApiKeyBtn.innerText = "Save";
-					}, 3000);
-				}
-			);
-		}
-
-		const savedApiKey = chrome.storage.local.get(
-			"showwand-api-key",
-			function (data) {
-				if (data["showwand-api-key"]) {
-					apiKeyInput.value = data["showwand-api-key"];
-				}
-			}
-		);
-
-		postBtn.addEventListener("click", () => {
-			const postDescription = document.getElementById("post-description");
-			let fullPostDescription = postDescription.value;
-			const postTitle = document.getElementById("post-title");
-			const title = postTitle.value;
-			fullPostDescription = fullPostDescription + "\n   " + url;
-			const apiKey = apiKeyInput.value;
-			postFetchFunc(title, fullPostDescription, apiKey, () => {
-				if (!apiKey) {
-					alert(
-						"Please provide an Showwcase API key from Settings Option."
-					);
-					return;
-				}
-				window.close();
-			});
-		});
-
-		settingBtn.addEventListener("click", () => {
-			apiKeyModal.style.display = "block";
-		});
-
-		saveApiKeyBtn.addEventListener("click", () => {
-			const apiKey = apiKeyInput.value;
-			if (apiKey) {
-				saveApiKey(apiKey);
-				console.log("API key saved.");
-			} else {
-				alert("Please provide an API key.");
-			}
-		});
-
-		apiKeyModal.addEventListener("click", (event) => {
-			if (event.target == apiKeyModal) {
-				apiKeyModal.style.display = "none";
-			}
-		});
-	})
-	.catch((error) => {
-		console.error(error);
-	});
-
+const postBtn = document.getElementById("post-submit-btn");
+const apiKeyInput = document.getElementById("api-key-input");
+const apiKeyModal = document.getElementById("api-key-modal");
+const saveApiKeyBtn = document.getElementById("save-api-key-btn");
 const createPostBtn = document.getElementById("create-post-btn");
 const postsListBtn = document.getElementById("posts-list-btn");
 const settingBtn = document.getElementById("setting-btn");
+function getCurrentUrl() {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs.length === 0) {
+        reject("No active tabs found.");
+      } else {
+        resolve(tabs[0].url);
+      }
+    });
+  });
+}
+// Save API key to local storage
+function saveApiKey(apiKey) {
+  chrome.storage.local.set({ "showwand-api-key": apiKey }, function () {
+    saveApiKeyBtn.innerText = "Saved";
+    setTimeout(() => {
+      saveApiKeyBtn.innerText = "Save";
+    }, 3000);
+  });
+}
+// Display API key from local storage
+const savedApiKey = chrome.storage.local.get(
+  "showwand-api-key",
+  function (data) {
+    if (data["showwand-api-key"]) {
+      apiKeyInput.value = data["showwand-api-key"];
+    }
+  }
+);
 // Dynamically render
 function renderBlock(blockOrder) {
-	const blocks = document.getElementsByClassName("block");
-	for (let i = 0; i < blocks.length; i++) {
-		if (i == blockOrder) {
-			blocks[i].style.display = "block";
-		} else {
-			blocks[i].style.display = "none";
-		}
-	}
+  const blocks = document.getElementsByClassName("block");
+  for (let i = 0; i < blocks.length; i++) {
+    if (i == blockOrder) {
+      blocks[i].style.display = "block";
+    } else {
+      blocks[i].style.display = "none";
+    }
+  }
+}
+// Add .active class to the selected btn
+function addActiveClass(btnOrder) {
+	  const btns = document.getElementsByClassName("all-nav-btn");
+	  for (let i = 0; i < btns.length; i++) {
+	    if (i == btnOrder) {
+	      btns[i].classList.add("active");
+	    } else {
+	      btns[i].classList.remove("active");
+	    }
+	  }
+}
+// Fetch function
+function postFetchFunc(title, description, url, apiKey, callback) {
+  const body = {
+    title: title ? title : "",
+    message: description,
+    linkPreviewUrl: url ? url : "",
+  };
+  fetch("https://cache.showwcase.com/threads", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+    body: JSON.stringify(body),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      window.close(); // close the window after successful post
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      if (callback) {
+        callback();
+      }
+    })
+    .catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+    });
 }
 
+// Post btn event listener
+postBtn.addEventListener("click", () => {
+  const postTitle = document.getElementById("post-title").value;
+  const postDescription = document.getElementById("post-description").value;
+  const apiKey = apiKeyInput.value;
+  const urlCheckbox = document.getElementById("url-checkbox");
+  if (urlCheckbox && urlCheckbox.checked) {
+    getCurrentUrl()
+      .then((url) => {
+        postFetchFunc(postTitle, postDescription, url, apiKey);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  } else {
+    postFetchFunc(postTitle, postDescription, "", apiKey);
+  }
+});
+
+// Save API key btn event listener
+saveApiKeyBtn.addEventListener("click", () => {
+  const apiKey = apiKeyInput.value;
+  if (apiKey) {
+    saveApiKey(apiKey);
+    console.log("API key saved.");
+  } else {
+    alert("Please provide an API key.");
+  }
+});
+
 createPostBtn.addEventListener("click", () => {
-	renderBlock(0);
+  renderBlock(0);
+  addActiveClass(0);
 });
 
 postsListBtn.addEventListener("click", () => {
-	renderBlock(1);
+  renderBlock(1);
+  addActiveClass(1);
 });
 
 settingBtn.addEventListener("click", () => {
-	renderBlock(2);
+  renderBlock(2);
+  addActiveClass(2);
 });
