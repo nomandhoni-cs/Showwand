@@ -86,7 +86,7 @@ button#save-api-key-btn {
 }
 /* content */
 .content{
-    padding: 30px 0;
+    padding: 25px 0;
 }
 .block.create-post-block {
     padding: 30px 25px;
@@ -112,7 +112,7 @@ button#save-api-key-btn {
 }
 textarea#post-description{
     width: 100%;
-    height: 230px;
+    height: 200px;
     font-size: 16px;
     line-height: 25px;
     color: #fff;
@@ -150,10 +150,72 @@ textarea::-webkit-scrollbar {
 }
 /* content */
 /* posts start*/
-.post-message {
-    padding: 10px 15px;
+#posts-list{
+    padding: 0 7px;
+    height: 450px;
+    overflow-y: scroll;
+}
+#posts-list::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+#posts-list::-webkit-scrollbar {
+    width: 12px;
+    background-color: transparent;
+}
+
+#posts-list::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, .3);
+    background-color: #555;
+}
+.single-post{
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 20px 0;
+    background: #2e2e2f;
+    border-radius: 7px;
+    position: relative;
+}
+.profile-img img{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    padding: 0 10px;
+}
+.post-content {
+    padding-right: 45px;
+}
+.post-content a{
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 16px;
+}
+.post-content h2 {
+    font-size: 18px;
+    padding-bottom: 12px;
+}
+.post-content p {
+    font-size: 15px;
+    font-weight: 400;
+}
+.delete-post-btn svg {
+    width: 30px;
+    height: 30px;
+    position: absolute;
+    right: 5px;
+    top: 35%;
     cursor: pointer;
 }
+/* .post-message {
+    padding: 10px 15px;
+    cursor: pointer;
+} */
 /* posts end*/
 
 
@@ -163,6 +225,11 @@ textarea::-webkit-scrollbar {
 }
 .posts-block{
     display: none;
+}
+.posts-block h3{
+    text-align: center;
+    font-size: 25px;
+    padding-bottom: 20px;
 }
 .setting-block{
     display: none;
