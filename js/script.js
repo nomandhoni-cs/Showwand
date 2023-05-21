@@ -210,7 +210,6 @@ function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
 						boostButton.style.cursor = "not-allowed";
 						boostCount.innerText = boostedByArrayLength;
 					  }					  
-					return 0;
 				})
 				.catch((error) => {
 					console.error(
