@@ -204,13 +204,17 @@ textarea::-webkit-scrollbar {
     font-size: 15px;
     font-weight: 400;
 }
-.delete-post-btn svg {
+.boost-post-btn svg {
     width: 30px;
     height: 30px;
     position: absolute;
     right: 5px;
     top: 35%;
     cursor: pointer;
+}
+.boost-post-btn:hover svg{
+    border: 1px currentColor solid;
+    border-radius: 50%;
 }
 /* .post-message {
     padding: 10px 15px;
