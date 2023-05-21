@@ -164,6 +164,61 @@ saveApiKeyBtn.addEventListener("click", () => {
 		alert("Please provide an API key.");
 	}
 });
+// Add boost event listener to every boost post btn
+function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
+			const apiKey = apiKeyInput.value;
+			let afterBoostedbyUser = isBoostedByUser;
+			if (!apiKey) {
+				alert("Please provide an API key");
+				return;
+			}
+		let url = `https://cache.showwcase.com/threads/${postId}/` + (afterBoostedbyUser ? "unboost" : "boost");
+			fetch(
+				`${url}`,
+				{
+					method: "POST",
+					headers: {
+						"Content-Type": "application/json",
+						"x-api-key": apiKey,
+					},
+				}
+			)
+				.then((response) => {
+					if (!response.ok) {
+						throw new Error(
+							"Network response was not ok"
+						);
+					}
+					return response.json();
+				})
+				.then((data) => {
+					console.log(data, postId, afterBoostedbyUser, url);
+					afterBoostedbyUser = !afterBoostedbyUser;
+					const boostCount = document.getElementById("boost-count-"+ postId)
+					if (data.success === true) {
+						boostedByArrayLength++;
+						const boostButton = document.getElementById("svg-" + postId);
+						boostButton.setAttribute("fill", "#27ae60");
+						boostButton.setAttribute("disabled", "true");
+						boostButton.style.cursor = "not-allowed";
+						boostCount.innerText = boostedByArrayLength;
+					} else {
+						boostedByArrayLength--;
+						const boostButton = document.getElementById("svg-" + postId);
+						boostButton.setAttribute("fill", "#ffffff");
+						boostButton.setAttribute("disabled", "true");
+						boostButton.style.cursor = "not-allowed";
+						boostCount.innerText = boostedByArrayLength;
+					  }					  
+					return 0;
+				})
+				.catch((error) => {
+					console.error(
+						"There was a problem with the fetch operation:",
+						error
+					);
+				});
+}
 // Fetch posts list and display them in the id="posts-list" div
 function fetchPostsList() {
 	const postsList = document.getElementById("posts-list");
@@ -181,26 +236,43 @@ function fetchPostsList() {
 			if (isPostLoaded == false) {
 				posts.forEach((post) => {
 					console.log(post);
+					const boostedByArray = post.boostedBy;
+					let boostedByArrayLength = boostedByArray.length;
+					let isBoostedByUser = false;
+					for (let i = 0; i < boostedByArray.length; i++) {
+					const user = boostedByArray[i];
+					if (user.username === userInformationFromNotification.username) {
+						isBoostedByUser = true;
+						break;
+					}
+					}
 					// Insert every post message into the postsList div
 					// Using Template Literals
+
 					const postMessage = `
-          <div class="single-post">
-            <div class="profile-img"><img src="${
-				post.user.profilePictureKey
-			}"></div>
-            <div class="post-content">
-            <a href="https://www.showwcase.com/thread/${
-				post.id
-			}" target="_blank">
-              <h2 class="post-title">${post.title ? post.title : ""}</h2>
-              <p class="post-message">${post.message}</p>
-            </a>
-            </div>
-			<div class="delete-post-btn"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Interface / Trash_Full"> <path id="Vector" d="M14 10V17M10 10V17M6 6V17.8C6 18.9201 6 19.4798 6.21799 19.9076C6.40973 20.2839 6.71547 20.5905 7.0918 20.7822C7.5192 21 8.07899 21 9.19691 21H14.8031C15.921 21 16.48 21 16.9074 20.7822C17.2837 20.5905 17.5905 20.2839 17.7822 19.9076C18 19.4802 18 18.921 18 17.8031V6M6 6H8M6 6H4M8 6H16M8 6C8 5.06812 8 4.60241 8.15224 4.23486C8.35523 3.74481 8.74432 3.35523 9.23438 3.15224C9.60192 3 10.0681 3 11 3H13C13.9319 3 14.3978 3 14.7654 3.15224C15.2554 3.35523 15.6447 3.74481 15.8477 4.23486C15.9999 4.6024 16 5.06812 16 6M16 6H18M18 6H20" stroke="#ff0000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g> </g></svg></div>
-          
-          </div>`;
+					<div class="single-post">
+						<div class="profile-img"><img src="${
+							post.user.profilePictureKey
+						}"></div>
+						<div class="post-content">
+						<a href="https://www.showwcase.com/thread/${
+							post.id
+						}" target="_blank">
+						<h2 class="post-title">${post.title ? post.title : ""}</h2>
+						<p class="post-message">${post.message}</p>
+						</a>
+						</div>
+						<div class="boost-post-btn">
+						<svg class="boost-post-svg" post-id="${post.id}" id="svg-${post.id}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill=${isBoostedByUser? "#27ae60" : "currentColor"} aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path></svg>
+						<span id="boost-count-${post.id}" class="boost-count">${boostedByArrayLength}</span>
+						</div>
+					</div>`;
 					postsList.insertAdjacentHTML("beforeend", postMessage);
+					document.getElementById("svg-"+post.id).addEventListener("click", () => {
+						addBoostEventListener(post.id, isBoostedByUser, boostedByArrayLength)
+					});
 				});
+				// addBoostEventListener(isBoostedByUser);
 				isPostLoaded = true;
 			}
 		})
