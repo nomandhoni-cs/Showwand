@@ -165,19 +165,16 @@ saveApiKeyBtn.addEventListener("click", () => {
 	}
 });
 // Add boost event listener to every boost post btn
-function addBoostEventListener() {
-	const boostBtns = document.getElementsByClassName("boost-post-svg");
-	for (let i = 0; i < boostBtns.length; i++) {
-		boostBtns[i].addEventListener("click", () => {
-			const postId = boostBtns[i].getAttribute("post-id");
-			console.log(postId);
+function addBoostEventListener(postId, isBoostedByUser) {
 			const apiKey = apiKeyInput.value;
+			let afterBoostedbyUser = isBoostedByUser;
 			if (!apiKey) {
 				alert("Please provide an API key");
 				return;
 			}
+		let url = `https://cache.showwcase.com/threads/${postId}/` + (afterBoostedbyUser ? "unboost" : "boost");
 			fetch(
-				`https://cache.showwcase.com/threads/${postId}/boost`,
+				`${url}`,
 				{
 					method: "POST",
 					headers: {
@@ -195,11 +192,20 @@ function addBoostEventListener() {
 					return response.json();
 				})
 				.then((data) => {
-					console.log(data);
-					if(data.success === true){
-						let svgSuccess = document.getElementById('svg-'+postId).setAttribute("fill", "#27ae60");
-						console.log(svgSuccess, postId)
-					}
+					console.log(data, postId, afterBoostedbyUser, url);
+					afterBoostedbyUser = !afterBoostedbyUser;
+					if (data.success === true) {
+						const boostButton = document.getElementById("svg-" + postId);
+						boostButton.setAttribute("fill", "#27ae60");
+						boostButton.setAttribute("disabled", "true");
+						boostButton.style.cursor = "not-allowed";
+					  } else {
+						const boostButton = document.getElementById("svg-" + postId);
+						boostButton.setAttribute("fill", "#ffffff");
+						boostButton.setAttribute("disabled", "true");
+						boostButton.style.cursor = "not-allowed";
+					  }					  
+					return 0;
 				})
 				.catch((error) => {
 					console.error(
@@ -207,8 +213,6 @@ function addBoostEventListener() {
 						error
 					);
 				});
-		});
-	}
 }
 // Fetch posts list and display them in the id="posts-list" div
 function fetchPostsList() {
@@ -258,8 +262,11 @@ function fetchPostsList() {
 						</div>
 					</div>`;
 					postsList.insertAdjacentHTML("beforeend", postMessage);
+					document.getElementById("svg-"+post.id).addEventListener("click", () => {
+						addBoostEventListener(post.id, isBoostedByUser)
+					});
 				});
-				addBoostEventListener();
+				// addBoostEventListener(isBoostedByUser);
 				isPostLoaded = true;
 			}
 		})
