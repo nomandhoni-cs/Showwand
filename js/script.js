@@ -165,7 +165,7 @@ saveApiKeyBtn.addEventListener("click", () => {
 	}
 });
 // Add boost event listener to every boost post btn
-function addBoostEventListener(postId, isBoostedByUser) {
+function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
 			const apiKey = apiKeyInput.value;
 			let afterBoostedbyUser = isBoostedByUser;
 			if (!apiKey) {
@@ -194,16 +194,21 @@ function addBoostEventListener(postId, isBoostedByUser) {
 				.then((data) => {
 					console.log(data, postId, afterBoostedbyUser, url);
 					afterBoostedbyUser = !afterBoostedbyUser;
+					const boostCount = document.getElementById("boost-count-"+ postId)
 					if (data.success === true) {
+						boostedByArrayLength++;
 						const boostButton = document.getElementById("svg-" + postId);
 						boostButton.setAttribute("fill", "#27ae60");
 						boostButton.setAttribute("disabled", "true");
 						boostButton.style.cursor = "not-allowed";
-					  } else {
+						boostCount.innerText = boostedByArrayLength;
+					} else {
+						boostedByArrayLength--;
 						const boostButton = document.getElementById("svg-" + postId);
 						boostButton.setAttribute("fill", "#ffffff");
 						boostButton.setAttribute("disabled", "true");
 						boostButton.style.cursor = "not-allowed";
+						boostCount.innerText = boostedByArrayLength;
 					  }					  
 					return 0;
 				})
@@ -232,7 +237,7 @@ function fetchPostsList() {
 				posts.forEach((post) => {
 					console.log(post);
 					const boostedByArray = post.boostedBy;
-
+					let boostedByArrayLength = boostedByArray.length;
 					let isBoostedByUser = false;
 					for (let i = 0; i < boostedByArray.length; i++) {
 					const user = boostedByArray[i];
@@ -259,11 +264,12 @@ function fetchPostsList() {
 						</div>
 						<div class="boost-post-btn">
 						<svg class="boost-post-svg" post-id="${post.id}" id="svg-${post.id}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill=${isBoostedByUser? "#27ae60" : "currentColor"} aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path></svg>
+						<span id="boost-count-${post.id}" class="boost-count">${boostedByArrayLength}</span>
 						</div>
 					</div>`;
 					postsList.insertAdjacentHTML("beforeend", postMessage);
 					document.getElementById("svg-"+post.id).addEventListener("click", () => {
-						addBoostEventListener(post.id, isBoostedByUser)
+						addBoostEventListener(post.id, isBoostedByUser, boostedByArrayLength)
 					});
 				});
 				// addBoostEventListener(isBoostedByUser);
