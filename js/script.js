@@ -1,10 +1,12 @@
 const postBtn = document.getElementById("post-submit-btn");
 const apiKeyInput = document.getElementById("api-key-input");
 const apiKeyModal = document.getElementById("api-key-modal");
-const saveApiKeyBtn = document.getElementById("save-api-key-btn");
+// const saveApiKeyBtn = document.getElementById("save-api-key-btn");
 const createPostBtn = document.getElementById("create-post-btn");
 const postsListBtn = document.getElementById("posts-list-btn");
 const settingBtn = document.getElementById("setting-btn");
+const form = document.getElementById("api-username-form");
+
 let userInformationFromNotification = "";
 let isPostLoaded = false;
 function getCurrentUrl() {
@@ -21,24 +23,42 @@ function getCurrentUrl() {
 		);
 	});
 }
-// Save API key to local storage
-function saveApiKey(apiKey) {
-	chrome.storage.local.set({ "showwand-api-key": apiKey }, function () {
-		saveApiKeyBtn.innerText = "Saved";
-		setTimeout(() => {
-			saveApiKeyBtn.innerText = "Save";
-		}, 3000);
-	});
-}
-// Display API key from local storage
-const savedApiKey = chrome.storage.local.get(
-	"showwand-api-key",
-	function (data) {
-		if (data["showwand-api-key"]) {
-			apiKeyInput.value = data["showwand-api-key"];
-		}
-	}
-);
+// Form submit event listener
+form.addEventListener("submit", (event) => {
+	event.preventDefault(); // Prevent form submission
+	
+	const apiKeyInput = document.getElementById("api-key-input");
+	const usernameInput = document.getElementById("api-username-input");
+	
+	const apiKey = apiKeyInput.value;
+	const username = usernameInput.value;
+	
+	// Save values to local storage
+	localStorage.setItem("apiKey", apiKey);
+	localStorage.setItem("username", username);
+	
+	console.log("API Key:", apiKey);
+	console.log("Username:", username);
+  });
+  
+// // Save API key to local storage
+// function saveApiKey(apiKey) {
+// 	chrome.storage.local.set({ "showwand-api-key": apiKey }, function () {
+// 		saveApiKeyBtn.innerText = "Saved";
+// 		setTimeout(() => {
+// 			saveApiKeyBtn.innerText = "Save";
+// 		}, 3000);
+// 	});
+// }
+// // Display API key from local storage
+// const savedApiKey = chrome.storage.local.get(
+// 	"showwand-api-key",
+// 	function (data) {
+// 		if (data["showwand-api-key"]) {
+// 			apiKeyInput.value = data["showwand-api-key"];
+// 		}
+// 	}
+// );
 // Dynamically render
 function renderBlock(blockOrder) {
 	const blocks = document.getElementsByClassName("block");
@@ -120,52 +140,52 @@ postBtn.addEventListener("click", () => {
 	}
 });
 
-// Fetch user info function from Notification
-function fetchUserInfo(apiKey) {
-	fetch("https://cache.showwcase.com/notifications", {
-		headers: {
-			"Content-Type": "application/json",
-			"x-api-key": apiKey,
-		},
-	})
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
-			}
-			return response.json();
-		})
-		.then((data) => {
-			const user = data[0].data.thread.user;
-			const userJson = JSON.stringify(user);
-			chrome.storage.local.set({ userInfo: userJson });
-		})
-		.catch((error) => {
-			console.error(
-				"There was a problem with the fetch operation:",
-				error
-			);
-		});
-}
-// Save user info to local storage
-chrome.storage.local.get(["userInfo"], function (result) {
-	const userJson = result.userInfo;
-	const user = JSON.parse(userJson);
-	userInformationFromNotification = user;
-	console.log(userInformationFromNotification);
-});
-// Save API key btn event listener
-saveApiKeyBtn.addEventListener("click", () => {
-	const apiKey = apiKeyInput.value;
-	if (apiKey) {
-		saveApiKey(apiKey);
-		fetchUserInfo(apiKey);
-		console.log("API key saved.");
-		// Close the window after saving API key
-		window.close();
-	} else {
-		alert("Please provide an API key.");
-	}
-});
+// // Fetch user info function from Notification
+// function fetchUserInfo(apiKey) {
+// 	fetch("https://cache.showwcase.com/notifications", {
+// 		headers: {
+// 			"Content-Type": "application/json",
+// 			"x-api-key": apiKey,
+// 		},
+// 	})
+// 		.then((response) => {
+// 			if (!response.ok) {
+// 				throw new Error("Network response was not ok");
+// 			}
+// 			return response.json();
+// 		})
+// 		.then((data) => {
+// 			const user = data[0].data.thread.user;
+// 			const userJson = JSON.stringify(user);
+// 			chrome.storage.local.set({ userInfo: userJson });
+// 		})
+// 		.catch((error) => {
+// 			console.error(
+// 				"There was a problem with the fetch operation:",
+// 				error
+// 			);
+// 		});
+// }
+// // Save user info to local storage
+// chrome.storage.local.get(["userInfo"], function (result) {
+// 	const userJson = result.userInfo;
+// 	const user = JSON.parse(userJson);
+// 	userInformationFromNotification = user;
+// 	console.log(userInformationFromNotification);
+// });
+// // Save API key btn event listener
+// saveApiKeyBtn.addEventListener("click", () => {
+// 	const apiKey = apiKeyInput.value;
+// 	if (apiKey) {
+// 		saveApiKey(apiKey);
+// 		fetchUserInfo(apiKey);
+// 		console.log("API key saved.");
+// 		// Close the window after saving API key
+// 		window.close();
+// 	} else {
+// 		alert("Please provide an API key.");
+// 	}
+// });
 // Add boost event listener to every boost post btn
 function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
 			const apiKey = apiKeyInput.value;
@@ -223,9 +243,17 @@ function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
 // Fetch posts list and display them in the id="posts-list" div
 function fetchPostsList() {
 	const postsList = document.getElementById("posts-list");
-	fetch(
-		`https://cache.showwcase.com/threads/?username=${userInformationFromNotification.username}&limit=5`
-	)
+	
+	// Get username from local storage
+	const storedUsername = localStorage.getItem("username");
+	if (!storedUsername) {
+		console.error("Username not found in local storage");
+		return;
+	}
+	
+	const username = storedUsername;
+	
+	fetch(`https://cache.showwcase.com/threads/?username=${username}&limit=5`)
 		.then((response) => {
 			if (!response.ok) {
 				throw new Error("Network response was not ok");
@@ -278,12 +306,10 @@ function fetchPostsList() {
 			}
 		})
 		.catch((error) => {
-			console.error(
-				"There was a problem with the fetch operation:",
-				error
-			);
+			console.error("There was a problem with the fetch operation:", error);
 		});
 }
+
 createPostBtn.addEventListener("click", () => {
 	renderBlock(0);
 	addActiveClass(0);
