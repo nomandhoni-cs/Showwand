@@ -6,7 +6,7 @@ const createPostBtn = document.getElementById("create-post-btn");
 const postsListBtn = document.getElementById("posts-list-btn");
 const settingBtn = document.getElementById("setting-btn");
 const form = document.getElementById("api-username-form");
-
+const formSubmitBtn = document.getElementById("save-api-key-btn");
 let userInformationFromNotification = "";
 let isPostLoaded = false;
 function getCurrentUrl() {
@@ -38,6 +38,19 @@ form.addEventListener("submit", (event) => {
   
 	// Save API key to Chrome storage
 	chrome.storage.local.set({ "showwcase-api-key": apiKey }, function () {
+		// Change the text to submitted but not change the svg icon in the btn
+		formSubmitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+		<path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+	  </svg> Submitted!`;
+		// Change the text back to submit after 3 seconds
+		setTimeout(() => {
+			formSubmitBtn.innerHTML = `<svg class="paper-plane" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+			aria-hidden="true">
+			<path
+				d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
+			</path>
+		</svg> Submit`;
+		}, 2000);
 	  console.log("API key saved to Chrome storage");
 	});
   
@@ -64,10 +77,7 @@ form.addEventListener("submit", (event) => {
 // // Save API key to local storage
 // function saveApiKey(apiKey) {
 // 	chrome.storage.local.set({ "showwcase-api-key": apiKey }, function () {
-// 		saveApiKeyBtn.innerText = "Saved";
-// 		setTimeout(() => {
-// 			saveApiKeyBtn.innerText = "Save";
-// 		}, 3000);
+
 // 	});
 // }
 // // Display API key from local storage
