@@ -172,22 +172,25 @@ textarea::-webkit-scrollbar {
 }
 .single-post {
 	display: flex;
-	align-items: center;
 	margin-bottom: 20px;
 	padding: 20px 0;
 	background: #2e2e2f;
 	border-radius: 7px;
 	position: relative;
 }
+.profile-img {
+	position: relative;
+	top: 15px;
+}
 .profile-img img {
 	width: 40px;
 	height: 40px;
 	border-radius: 50%;
-	margin-right: 10px;
-	padding: 0 10px;
+	margin-right: 5px;
+	padding: 0 8px;
 }
 .post-content {
-	padding-right: 45px;
+	padding-right: 15px;
 }
 .post-content a {
 	color: #fff;
@@ -203,12 +206,21 @@ textarea::-webkit-scrollbar {
 	font-size: 15px;
 	font-weight: 400;
 }
+.boost-post-btn {
+	display: flex;
+	justify-content: center;
+	flex-direction: row-reverse;
+	position: relative;
+	top: 10px;
+}
+.boost-count {
+	position: relative;
+	top: 5px;
+	right: 4px;
+}
 .boost-post-btn svg {
-	width: 30px;
-	height: 30px;
-	position: absolute;
-	right: 5px;
-	top: 35%;
+	width: 25px;
+	height: 25px;
 	cursor: pointer;
 }
 .boost-post-btn:hover svg {
