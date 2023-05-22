@@ -202,19 +202,7 @@ postBtn.addEventListener("click", () => {
 // 	userInformationFromNotification = user;
 // 	console.log(userInformationFromNotification);
 // });
-// // Save API key btn event listener
-// saveApiKeyBtn.addEventListener("click", () => {
-// 	const apiKey = apiKeyInput.value;
-// 	if (apiKey) {
-// 		saveApiKey(apiKey);
-// 		fetchUserInfo(apiKey);
-// 		console.log("API key saved.");
-// 		// Close the window after saving API key
-// 		window.close();
-// 	} else {
-// 		alert("Please provide an API key.");
-// 	}
-// });
+
 // Add boost event listener to every boost post btn
 function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
 			const apiKey = apiKeyInput.value;
@@ -300,14 +288,12 @@ function fetchPostsList() {
 						let isBoostedByUser = false;
 						for (let i = 0; i < boostedByArray.length; i++) {
 							const user = boostedByArray[i];
-							if (user.username === userInformationFromNotification.username) {
+							if (user.username === userInformationFromNotification.username || user.username === username) {
 								isBoostedByUser = true;
 								break;
 							}
 						}
 						// Insert every post message into the postsList div
-						// Using Template Literals
-
 						const postMessage = `
 						<div class="single-post">
 							<div class="profile-img"><img src="${post.user.profilePictureKey}"></div>
