@@ -23,6 +23,15 @@ function getCurrentUrl() {
 		);
 	});
 }
+// Function to get saved user info to chrome storage
+function getSavedUserInfoFromChromeStorage() {
+	chrome.storage.local.get(["userInfo"], function (result) {
+		const userJson = result.userInfo;
+		const user = JSON.parse(userJson);
+		userInformationFromNotification = user;
+		console.log(userInformationFromNotification);
+	});
+}
 // Fetch user info function from Notification
 function fetchUserInfo(apiKey) {
 	fetch("https://cache.showwcase.com/notifications", {
@@ -41,13 +50,7 @@ function fetchUserInfo(apiKey) {
 			const user = data[0].data.thread.user;
 			const userJson = JSON.stringify(user);
 			chrome.storage.local.set({ userInfo: userJson });
-			// Save user info to local storage
-			chrome.storage.local.get(["userInfo"], function (result) {
-				const userJson = result.userInfo;
-				const user = JSON.parse(userJson);
-				userInformationFromNotification = user;
-				console.log(userInformationFromNotification);
-			});
+			getSavedUserInfoFromChromeStorage();
 		})
 		.catch((error) => {
 			console.error(
@@ -245,7 +248,7 @@ function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
 // Fetch posts list and display them in the id="posts-list" div
 function fetchPostsList() {
 	const postsList = document.getElementById("posts-list");
-
+	getSavedUserInfoFromChromeStorage();
 	// Get username from Chrome storage
 	chrome.storage.local.get("showwcase-username", function (result) {
 		const storedUsername = result["showwcase-username"];
