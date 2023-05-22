@@ -19,11 +19,11 @@ chrome.runtime.onInstalled.addListener(function() {
   chrome.contextMenus.onClicked.addListener(function(info, tab) {
     try {
       if (info.menuItemId === "showwandSelection") {
-        chrome.storage.local.get("showwand-api-key", function(data) {
-          var apiKey = data["showwand-api-key"];
+        chrome.storage.local.get("showwcase-api-key", function(data) {
+          var apiKey = data["showwcase-api-key"];
           console.log(apiKey);
           if (!apiKey) {
-            // chrome.runtime.openOptionsPage();
+            chrome.runtime.openOptionsPage();
             return;
           }
           let selectedText = info.selectionText;
@@ -38,7 +38,6 @@ chrome.runtime.onInstalled.addListener(function() {
     }
   });
 
-  
   function postFetchFunc(postDescription, apiKey, callback) {
     try {
       fetch('https://cache.showwcase.com/threads', {
