@@ -1,0 +1,79 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+* {
+	margin: 0;
+	padding: 0;
+}
+body {
+	background: #171718;
+	font-family: "Inter", sans-serif;
+	font-size: 14px;
+	background-blend-mode: normal, lighten;
+	color: aliceblue;
+}
+.container {
+    width: 1140px;
+    margin: auto;
+    padding: 0;
+    box-sizing: border-box;
+}
+.content{
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    padding: 30px 0 0 0;
+    box-sizing: border-box;
+    text-align: center;
+}
+.modal-content h2 {
+	text-align: center;
+	padding-bottom: 18px;
+	font-weight: 800;
+	font-size: 22px;
+}
+form {
+	margin-left: 10px;
+	margin-top: 22px;
+    text-align: center;
+}
+.modal-content label {
+	display: block;
+	padding-bottom: 15px;
+	padding-left: 8px;
+    font-size: 20px;
+}
+.modal-content input[type="text"] {
+	padding: 8px 14px;
+	background: transparent;
+	color: #999;
+	width: 87%;
+	margin-left: 6px;
+	border: 1px dotted;
+	margin-bottom: 20px;
+	border-radius: 7px;
+}
+.common-btn .paper-plane{
+	transform: rotate(45deg);
+}
+/* Button */
+.common-btn {
+	height: 35px;
+	line-height: 35px;
+	display: block;
+	padding: 0 30px;
+	border: transparent;
+	border-radius: 7px;
+	margin-top: 20px;
+	transition: 0.3s ease-in-out;
+}
+.common-btn:hover {
+	background-color: #666;
+	color: #fff;
+	cursor: pointer;
+}
+.common-btn svg {
+	width: 16px;
+	height: 16px;
+	position: relative;
+	right: 5px;
+	top: 1px;
+}
