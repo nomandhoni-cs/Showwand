@@ -1,7 +1,7 @@
 const postBtn = document.getElementById("post-submit-btn");
 const apiKeyInput = document.getElementById("api-key-input");
+const usernameInput = document.getElementById("api-username-input");
 const apiKeyModal = document.getElementById("api-key-modal");
-// const saveApiKeyBtn = document.getElementById("save-api-key-btn");
 const createPostBtn = document.getElementById("create-post-btn");
 const postsListBtn = document.getElementById("posts-list-btn");
 const settingBtn = document.getElementById("setting-btn");
@@ -26,24 +26,44 @@ function getCurrentUrl() {
 // Form submit event listener
 form.addEventListener("submit", (event) => {
 	event.preventDefault(); // Prevent form submission
-	
+  
 	const apiKeyInput = document.getElementById("api-key-input");
 	const usernameInput = document.getElementById("api-username-input");
-	
+  
 	const apiKey = apiKeyInput.value;
 	const username = usernameInput.value;
-	
-	// Save values to local storage
-	localStorage.setItem("apiKey", apiKey);
-	localStorage.setItem("username", username);
-	
+  
 	console.log("API Key:", apiKey);
 	console.log("Username:", username);
+  
+	// Save API key to Chrome storage
+	chrome.storage.local.set({ "showwcase-api-key": apiKey }, function () {
+	  console.log("API key saved to Chrome storage");
+	});
+  
+	// Save username to Chrome storage
+	chrome.storage.local.set({ "showwcase-username": username }, function () {
+	  console.log("Username saved to Chrome storage");
+	});
   });
+  
+  // Retrieve API key from Chrome storage
+  chrome.storage.local.get("showwcase-api-key", function (data) {
+	if (data["showwcase-api-key"]) {
+	  apiKeyInput.value = data["showwcase-api-key"];
+	}
+  });
+  
+  // Retrieve username from Chrome storage
+  chrome.storage.local.get("showwcase-username", function (data) {
+	if (data["showwcase-username"]) {
+	  usernameInput.value = data["showwcase-username"];
+	}
+  });  
   
 // // Save API key to local storage
 // function saveApiKey(apiKey) {
-// 	chrome.storage.local.set({ "showwand-api-key": apiKey }, function () {
+// 	chrome.storage.local.set({ "showwcase-api-key": apiKey }, function () {
 // 		saveApiKeyBtn.innerText = "Saved";
 // 		setTimeout(() => {
 // 			saveApiKeyBtn.innerText = "Save";
@@ -52,13 +72,22 @@ form.addEventListener("submit", (event) => {
 // }
 // // Display API key from local storage
 // const savedApiKey = chrome.storage.local.get(
-// 	"showwand-api-key",
+// 	"showwcase-api-key",
 // 	function (data) {
-// 		if (data["showwand-api-key"]) {
-// 			apiKeyInput.value = data["showwand-api-key"];
+// 		if (data["showwcase-api-key"]) {
+// 			apiKeyInput.value = data["showwcase-api-key"];
 // 		}
 // 	}
 // );
+// Display API key and username from local storage
+const savedApiKey = localStorage.getItem("apiKey");
+const savedUsername = localStorage.getItem("username");
+if (savedApiKey) {
+	apiKeyInput.value = savedApiKey;
+}
+if (savedUsername) {
+	usernameInput.value = savedUsername;
+}
 // Dynamically render
 function renderBlock(blockOrder) {
 	const blocks = document.getElementsByClassName("block");
@@ -243,72 +272,73 @@ function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
 // Fetch posts list and display them in the id="posts-list" div
 function fetchPostsList() {
 	const postsList = document.getElementById("posts-list");
-	
-	// Get username from local storage
-	const storedUsername = localStorage.getItem("username");
-	if (!storedUsername) {
-		console.error("Username not found in local storage");
-		return;
-	}
-	
-	const username = storedUsername;
-	
-	fetch(`https://cache.showwcase.com/threads/?username=${username}&limit=5`)
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
-			}
-			return response.json();
-		})
-		.then((data) => {
-			const posts = data;
-			if (isPostLoaded == false) {
-				posts.forEach((post) => {
-					console.log(post);
-					const boostedByArray = post.boostedBy;
-					let boostedByArrayLength = boostedByArray.length;
-					let isBoostedByUser = false;
-					for (let i = 0; i < boostedByArray.length; i++) {
-					const user = boostedByArray[i];
-					if (user.username === userInformationFromNotification.username) {
-						isBoostedByUser = true;
-						break;
-					}
-					}
-					// Insert every post message into the postsList div
-					// Using Template Literals
 
-					const postMessage = `
-					<div class="single-post">
-						<div class="profile-img"><img src="${
-							post.user.profilePictureKey
-						}"></div>
-						<div class="post-content">
-						<a href="https://www.showwcase.com/thread/${
-							post.id
-						}" target="_blank">
-						<h2 class="post-title">${post.title ? post.title : ""}</h2>
-						<p class="post-message">${post.message}</p>
-						</a>
-						</div>
-						<div class="boost-post-btn">
-						<svg class="boost-post-svg" post-id="${post.id}" id="svg-${post.id}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill=${isBoostedByUser? "#27ae60" : "currentColor"} aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path></svg>
-						<span id="boost-count-${post.id}" class="boost-count">${boostedByArrayLength}</span>
-						</div>
-					</div>`;
-					postsList.insertAdjacentHTML("beforeend", postMessage);
-					document.getElementById("svg-"+post.id).addEventListener("click", () => {
-						addBoostEventListener(post.id, isBoostedByUser, boostedByArrayLength)
+	// Get username from Chrome storage
+	chrome.storage.local.get("showwcase-username", function (result) {
+		const storedUsername = result["showwcase-username"];
+		if (!storedUsername) {
+			console.error("Username not found in Chrome storage");
+			return;
+		}
+
+		const username = storedUsername;
+
+		fetch(`https://cache.showwcase.com/threads/?username=${username}&limit=15`)
+			.then((response) => {
+				if (!response.ok) {
+					throw new Error("Network response was not ok");
+				}
+				return response.json();
+			})
+			.then((data) => {
+				const posts = data;
+				if (!isPostLoaded) {
+					posts.forEach((post) => {
+						console.log(post);
+						const boostedByArray = post.boostedBy;
+						const boostedByArrayLength = boostedByArray.length;
+						let isBoostedByUser = false;
+						for (let i = 0; i < boostedByArray.length; i++) {
+							const user = boostedByArray[i];
+							if (user.username === userInformationFromNotification.username) {
+								isBoostedByUser = true;
+								break;
+							}
+						}
+						// Insert every post message into the postsList div
+						// Using Template Literals
+
+						const postMessage = `
+						<div class="single-post">
+							<div class="profile-img"><img src="${post.user.profilePictureKey}"></div>
+							<div class="post-content">
+								<a href="https://www.showwcase.com/thread/${post.id}" target="_blank">
+									<h2 class="post-title">${post.title ? post.title : ""}</h2>
+									<p class="post-message">${post.message}</p>
+								</a>
+							</div>
+							<div class="boost-post-btn">
+								<svg class="boost-post-svg" post-id="${post.id}" id="svg-${post.id}" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="${isBoostedByUser ? "#27ae60" : "currentColor"}" aria-hidden="true">
+									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
+								</svg>
+								<span id="boost-count-${post.id}" class="boost-count">${boostedByArrayLength}</span>
+							</div>
+						</div>`;
+
+						postsList.insertAdjacentHTML("beforeend", postMessage);
+						document.getElementById("svg-" + post.id).addEventListener("click", () => {
+							addBoostEventListener(post.id, isBoostedByUser, boostedByArrayLength);
+						});
 					});
-				});
-				// addBoostEventListener(isBoostedByUser);
-				isPostLoaded = true;
-			}
-		})
-		.catch((error) => {
-			console.error("There was a problem with the fetch operation:", error);
-		});
+					isPostLoaded = true;
+				}
+			})
+			.catch((error) => {
+				console.error("There was a problem with the fetch operation:", error);
+			});
+	});
 }
+
 
 createPostBtn.addEventListener("click", () => {
 	renderBlock(0);
