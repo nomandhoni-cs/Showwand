@@ -221,11 +221,13 @@ textarea::-webkit-scrollbar {
 .boost-post-btn svg {
 	width: 25px;
 	height: 25px;
+	border: 1px solid transparent;
+	border-radius: 30px;
 	cursor: pointer;
+	transition: 0.3s;
 }
-.boost-post-btn:hover svg {
+.boost-post-btn svg:hover {
 	border: 1px currentColor solid;
-	border-radius: 50%;
 }
 /* posts end*/
 
