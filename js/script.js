@@ -23,6 +23,39 @@ function getCurrentUrl() {
 		);
 	});
 }
+// Fetch user info function from Notification
+function fetchUserInfo(apiKey) {
+	fetch("https://cache.showwcase.com/notifications", {
+		headers: {
+			"Content-Type": "application/json",
+			"x-api-key": apiKey,
+		},
+	})
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error("Network response was not ok");
+			}
+			return response.json();
+		})
+		.then((data) => {
+			const user = data[0].data.thread.user;
+			const userJson = JSON.stringify(user);
+			chrome.storage.local.set({ userInfo: userJson });
+			// Save user info to local storage
+			chrome.storage.local.get(["userInfo"], function (result) {
+				const userJson = result.userInfo;
+				const user = JSON.parse(userJson);
+				userInformationFromNotification = user;
+				console.log(userInformationFromNotification);
+			});
+		})
+		.catch((error) => {
+			console.error(
+				"There was a problem with the fetch operation:",
+				error
+			);
+		});
+}
 // Form submit event listener
 form.addEventListener("submit", (event) => {
 	event.preventDefault(); // Prevent form submission
@@ -58,6 +91,7 @@ form.addEventListener("submit", (event) => {
 	chrome.storage.local.set({ "showwcase-username": username }, function () {
 	  console.log("Username saved to Chrome storage");
 	});
+	fetchUserInfo(apiKey);
   });
   
   // Retrieve API key from Chrome storage
@@ -72,32 +106,8 @@ form.addEventListener("submit", (event) => {
 	if (data["showwcase-username"]) {
 	  usernameInput.value = data["showwcase-username"];
 	}
-  });  
-  
-// // Save API key to local storage
-// function saveApiKey(apiKey) {
-// 	chrome.storage.local.set({ "showwcase-api-key": apiKey }, function () {
+  });
 
-// 	});
-// }
-// // Display API key from local storage
-// const savedApiKey = chrome.storage.local.get(
-// 	"showwcase-api-key",
-// 	function (data) {
-// 		if (data["showwcase-api-key"]) {
-// 			apiKeyInput.value = data["showwcase-api-key"];
-// 		}
-// 	}
-// );
-// Display API key and username from local storage
-const savedApiKey = localStorage.getItem("apiKey");
-const savedUsername = localStorage.getItem("username");
-if (savedApiKey) {
-	apiKeyInput.value = savedApiKey;
-}
-if (savedUsername) {
-	usernameInput.value = savedUsername;
-}
 // Dynamically render
 function renderBlock(blockOrder) {
 	const blocks = document.getElementsByClassName("block");
@@ -178,41 +188,6 @@ postBtn.addEventListener("click", () => {
 		postFetchFunc(postTitle, postDescription, "", apiKey);
 	}
 });
-
-// // Fetch user info function from Notification
-// function fetchUserInfo(apiKey) {
-// 	fetch("https://cache.showwcase.com/notifications", {
-// 		headers: {
-// 			"Content-Type": "application/json",
-// 			"x-api-key": apiKey,
-// 		},
-// 	})
-// 		.then((response) => {
-// 			if (!response.ok) {
-// 				throw new Error("Network response was not ok");
-// 			}
-// 			return response.json();
-// 		})
-// 		.then((data) => {
-// 			const user = data[0].data.thread.user;
-// 			const userJson = JSON.stringify(user);
-// 			chrome.storage.local.set({ userInfo: userJson });
-// 		})
-// 		.catch((error) => {
-// 			console.error(
-// 				"There was a problem with the fetch operation:",
-// 				error
-// 			);
-// 		});
-// }
-// // Save user info to local storage
-// chrome.storage.local.get(["userInfo"], function (result) {
-// 	const userJson = result.userInfo;
-// 	const user = JSON.parse(userJson);
-// 	userInformationFromNotification = user;
-// 	console.log(userInformationFromNotification);
-// });
-
 // Add boost event listener to every boost post btn
 function addBoostEventListener(postId, isBoostedByUser, boostedByArrayLength) {
 			const apiKey = apiKeyInput.value;
@@ -281,7 +256,7 @@ function fetchPostsList() {
 
 		const username = storedUsername;
 
-		fetch(`https://cache.showwcase.com/threads/?username=${username}&limit=15`)
+		fetch(`https://cache.showwcase.com/threads/?username=${userInformationFromNotification.username || username}&limit=15`)
 			.then((response) => {
 				if (!response.ok) {
 					throw new Error("Network response was not ok");
