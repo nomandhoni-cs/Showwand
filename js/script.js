@@ -122,7 +122,7 @@ postBtn.addEventListener("click", () => {
 
 // Fetch user info function from Notification
 function fetchUserInfo(apiKey) {
-	fetch("https://cache.showwcase.com/notifications/?limit=1", {
+	fetch("https://cache.showwcase.com/notifications", {
 		headers: {
 			"Content-Type": "application/json",
 			"x-api-key": apiKey,
@@ -160,6 +160,8 @@ saveApiKeyBtn.addEventListener("click", () => {
 		saveApiKey(apiKey);
 		fetchUserInfo(apiKey);
 		console.log("API key saved.");
+		// Close the window after saving API key
+		window.close();
 	} else {
 		alert("Please provide an API key.");
 	}
