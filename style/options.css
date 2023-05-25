@@ -89,5 +89,6 @@ form#api-username-form-options-page {
 }
 
 .modal-content button[type="submit"] {
-  align-self: flex-end;
+  align-self: flex-start;
+
 }
