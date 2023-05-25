@@ -94,7 +94,11 @@ form.addEventListener("submit", (event) => {
 	chrome.storage.local.set({ "showwcase-username": username }, function () {
 	  console.log("Username saved to Chrome storage");
 	});
-	fetchUserInfo(apiKey);
+	chrome.storage.local.get(["userInfo"], function (result) {
+		if(!result.userInfo) {
+      fetchUserInfo(apiKey);
+    }
+	});
   });
   
   // Retrieve API key from Chrome storage
