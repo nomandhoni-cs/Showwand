@@ -26,10 +26,12 @@ function getCurrentUrl() {
 // Function to get saved user info to chrome storage
 function getSavedUserInfoFromChromeStorage() {
 	chrome.storage.local.get(["userInfo"], function (result) {
+		if(result.userInfo) {
 		const userJson = result.userInfo;
 		const user = JSON.parse(userJson);
 		userInformationFromNotification = user;
 		console.log(userInformationFromNotification);
+		}
 	});
 }
 // Fetch user info function from Notification

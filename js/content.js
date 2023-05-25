@@ -22,7 +22,6 @@ function fetchUserInfo(apiKey) {
 				const user = data[0].data.thread.user;
 				const userJson = JSON.stringify(user);
 				chrome.storage.local.set({ userInfo: userJson });
-				getSavedUserInfoFromChromeStorage();
 			}
 		})
 		.catch((error) => {
