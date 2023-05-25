@@ -1,47 +1,51 @@
 //! Options Page JS Start
-const formInOptionsPage = document.getElementById("api-username-form-options-page");
-const formSubmitBtnOptionsPage = document.getElementById("save-api-key-btn-options-page");
-const apiKeyInputOptionsPage = document.getElementById("api-key-input-options-page");
-const usernameInputOptionsPage = document.getElementById("api-username-input-options-page");
+const formInOptionsPage = document.getElementById(
+  "api-username-form-options-page"
+);
+const formSubmitBtnOptionsPage = document.getElementById(
+  "save-api-key-btn-options-page"
+);
+const apiKeyInputOptionsPage = document.getElementById(
+  "api-key-input-options-page"
+);
+const usernameInputOptionsPage = document.getElementById(
+  "api-username-input-options-page"
+);
 // Fetch user info function from Notification
 function fetchUserInfo(apiKey) {
-	fetch("https://cache.showwcase.com/notifications", {
-		headers: {
-			"Content-Type": "application/json",
-			"x-api-key": apiKey,
-		},
-	})
-		.then((response) => {
-			if (!response.ok) {
-				throw new Error("Network response was not ok");
-			}
-			return response.json();
-		})
-		.then((data) => {
-			if(data[0].data.thread){
-				const user = data[0].data.thread.user;
-				const userJson = JSON.stringify(user);
-				chrome.storage.local.set({ userInfo: userJson });
-			}
-		})
-		.catch((error) => {
-			console.error(
-				"There was a problem with the fetch operation:",
-				error
-			);
-		});
+  fetch("https://cache.showwcase.com/notifications", {
+    headers: {
+      "Content-Type": "application/json",
+      "x-api-key": apiKey,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
+    })
+    .then((data) => {
+      if (data[0].data.thread) {
+        const user = data[0].data.thread.user;
+        const userJson = JSON.stringify(user);
+        chrome.storage.local.set({ userInfo: userJson });
+      }
+    })
+    .catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+    });
 }
 // Form submit event listener
 formInOptionsPage.addEventListener("submit", (event) => {
   event.preventDefault(); // Prevent form submission
-  
-  
+
   const apiKey = apiKeyInputOptionsPage.value;
   const username = usernameInputOptionsPage.value;
-  
+
   console.log("API Key:", apiKey);
   console.log("Username:", username);
-  
+
   // Save API key to Chrome storage
   chrome.storage.local.set({ "showwcase-api-key": apiKey }, function () {
     // Change the text to submitted but not change the svg icon in the btn
@@ -59,29 +63,29 @@ formInOptionsPage.addEventListener("submit", (event) => {
     }, 2000);
     console.log("API key saved to Chrome storage");
   });
-  
+
   // Save username to Chrome storage
   chrome.storage.local.set({ "showwcase-username": username }, function () {
     console.log("Username saved to Chrome storage");
   });
   chrome.storage.local.get(["userInfo"], function (result) {
-		if(!result.userInfo) {
+    if (!result.userInfo) {
       fetchUserInfo(apiKey);
     }
-	});
   });
-  
-  // Retrieve API key from Chrome storage
-  chrome.storage.local.get("showwcase-api-key", function (data) {
+});
+
+// Retrieve API key from Chrome storage
+chrome.storage.local.get("showwcase-api-key", function (data) {
   if (data["showwcase-api-key"]) {
     apiKeyInputOptionsPage.value = data["showwcase-api-key"];
   }
-  });
-  
-  // Retrieve username from Chrome storage
-  chrome.storage.local.get("showwcase-username", function (data) {
+});
+
+// Retrieve username from Chrome storage
+chrome.storage.local.get("showwcase-username", function (data) {
   if (data["showwcase-username"]) {
     usernameInputOptionsPage.value = data["showwcase-username"];
   }
-  });
+});
 //! Options Page JS END
