@@ -21,13 +21,6 @@
     "page": "options.html",
     "open_in_tab": true
   },
-  "content_scripts": [
-    {
-      "matches": ["http://*/*", "https://*/*"],
-      "js": ["js/content.js"],
-      "run_at": "document_end"
-    }
-  ],
   "background": {
     "service_worker": "js/background.js"
   }
