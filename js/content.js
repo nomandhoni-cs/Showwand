@@ -18,9 +18,12 @@ function fetchUserInfo(apiKey) {
 			return response.json();
 		})
 		.then((data) => {
-			const user = data[0].data.thread.user;
-			const userJson = JSON.stringify(user);
-			chrome.storage.local.set({ userInfo: userJson });
+			if(data[0].data.thread){
+				const user = data[0].data.thread.user;
+				const userJson = JSON.stringify(user);
+				chrome.storage.local.set({ userInfo: userJson });
+				getSavedUserInfoFromChromeStorage();
+			}
 		})
 		.catch((error) => {
 			console.error(
