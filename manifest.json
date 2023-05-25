@@ -12,20 +12,22 @@
   "action": {
     "default_popup": "popup.html"
   },
-  "permissions": [
-    "activeTab",
-    "contextMenus",
-    "storage"
-  ],
+  "permissions": ["activeTab", "contextMenus", "storage"],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
   "content_scripts": [
     {
-      "matches": ["http://*/*", "https://*/*"],
       "js": ["js/content.js"],
-      "run_at": "document_end"
+      "css": ["style/twitterId.css"],
+      "matches": ["https://twitter.com/*"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/showwcaselogo.svg"],
+      "matches": ["https://twitter.com/*"]
     }
   ],
   "background": {
