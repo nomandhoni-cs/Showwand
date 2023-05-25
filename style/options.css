@@ -1,0 +1,94 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: #171718;
+  font-family: "Inter", sans-serif;
+  font-size: 14px;
+  background-blend-mode: normal, lighten;
+  color: aliceblue;
+}
+
+.container {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  width: 400px;
+  padding: 30px;
+  background-color: #171718;
+  border-radius: 10px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  font-weight: 800;
+  font-size: 28px;
+  color: aliceblue;
+  margin-bottom: 40px;
+}
+
+form#api-username-form-options-page {
+  text-align: left;
+}
+
+.modal-content label {
+  display: block;
+  padding-bottom: 15px;
+  padding-left: 8px;
+  font-size: 20px;
+  color: aliceblue;
+}
+
+.modal-content input[type="text"] {
+  padding: 8px 14px;
+  background: transparent;
+  color: #999;
+  width: 100%;
+  margin-bottom: 20px;
+  border: 1px dotted;
+  border-radius: 7px;
+}
+
+.common-btn {
+	height: 35px;
+	line-height: 35px;
+	display: block;
+	padding: 0 30px;
+	border: transparent;
+	border-radius: 7px;
+	margin-top: 20px;
+	transition: 0.3s ease-in-out;
+}
+.common-btn:hover {
+	background-color: #666;
+	color: #fff;
+	cursor: pointer;
+}
+.common-btn svg {
+	width: 16px;
+	height: 16px;
+	position: relative;
+	right: 5px;
+	top: 1px;
+}
+.common-btn .paper-plane{
+	transform: rotate(45deg);
+}
+/* Additional Styling for Form */
+.modal-content form {
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-content button[type="submit"] {
+  align-self: flex-start;
+
+}

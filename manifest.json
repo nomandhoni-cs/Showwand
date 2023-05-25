@@ -1,7 +1,7 @@
 {
   "name": "Showwand",
-  "description": "A magical Browser extension, which directly post, delete in your Showwcase thread.",
-  "version": "0.5.0",
+  "description": "A magical Browser extension, which directly post, manage in your Showwcase thread.",
+  "version": "0.11.0",
   "manifest_version": 3,
   "icons": {
     "16": "assets/icon16.png",
