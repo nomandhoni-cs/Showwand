@@ -30,9 +30,9 @@ body {
 
 .modal-content h2 {
   font-weight: 800;
-  font-size: 22px;
+  font-size: 28px;
   color: aliceblue;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
 }
 
 form#api-username-form-options-page {
