@@ -12,15 +12,23 @@
   "action": {
     "default_popup": "popup.html"
   },
-  "permissions": [
-    "activeTab",
-    "contextMenus",
-    "storage"
-  ],
+  "permissions": ["activeTab", "contextMenus", "storage"],
   "options_ui": {
     "page": "options.html",
     "open_in_tab": true
   },
+  "content_scripts": [
+    {
+      "js": ["js/content.js"],
+      "matches": ["https://twitter.com/*"]
+    }
+  ],
+  "web_accessible_resources": [
+    {
+      "resources": ["assets/showwcaselogo.svg"],
+      "matches": ["https://twitter.com/*"]
+    }
+  ],
   "background": {
     "service_worker": "js/background.js"
   }
