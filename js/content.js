@@ -3,6 +3,32 @@ const formInOptionsPage = document.getElementById("api-username-form-options-pag
 const formSubmitBtnOptionsPage = document.getElementById("save-api-key-btn-options-page");
 const apiKeyInputOptionsPage = document.getElementById("api-key-input-options-page");
 const usernameInputOptionsPage = document.getElementById("api-username-input-options-page");
+// Fetch user info function from Notification
+function fetchUserInfo(apiKey) {
+	fetch("https://cache.showwcase.com/notifications", {
+		headers: {
+			"Content-Type": "application/json",
+			"x-api-key": apiKey,
+		},
+	})
+		.then((response) => {
+			if (!response.ok) {
+				throw new Error("Network response was not ok");
+			}
+			return response.json();
+		})
+		.then((data) => {
+			const user = data[0].data.thread.user;
+			const userJson = JSON.stringify(user);
+			chrome.storage.local.set({ userInfo: userJson });
+		})
+		.catch((error) => {
+			console.error(
+				"There was a problem with the fetch operation:",
+				error
+			);
+		});
+}
 // Form submit event listener
 formInOptionsPage.addEventListener("submit", (event) => {
   event.preventDefault(); // Prevent form submission
@@ -36,6 +62,11 @@ formInOptionsPage.addEventListener("submit", (event) => {
   chrome.storage.local.set({ "showwcase-username": username }, function () {
     console.log("Username saved to Chrome storage");
   });
+  chrome.storage.local.get(["userInfo"], function (result) {
+		if(!result.userInfo) {
+      fetchUserInfo(apiKey);
+    }
+	});
   });
   
   // Retrieve API key from Chrome storage
