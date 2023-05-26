@@ -146,7 +146,7 @@ textarea::-webkit-scrollbar {
 	right: 5px;
 	top: 1px;
 }
-.common-btn .paper-plane{
+.common-btn .paper-plane {
 	transform: rotate(45deg);
 }
 /* content */
@@ -192,7 +192,10 @@ textarea::-webkit-scrollbar {
 	padding: 0 8px;
 }
 .post-content {
-	padding-right: 15px;
+	padding-right: 10px;
+	display: block;
+	width: 70%;
+	word-wrap: break-word;
 }
 .post-content a {
 	color: #fff;
