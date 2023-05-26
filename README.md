@@ -53,3 +53,21 @@ With Showwand, you can effortlessly track and revisit your recent posts across a
  <a href="https://github.com/nomandhoni-cs/Showwand" target="_blank">
     <img src="https://project-assets.showwcase.com/57949/1685078608110-Create%2520Post%2520(1).webp" width='100%' alt="User Interface ( UI ) - Showwand" />
 </a>
+<h3 align="left">
+   Discover Showwcase IDs from Twitter Profiles:
+</h3>
+<p align="left">
+Searching for a user's Showwcase ID on Twitter? Showwand simplifies the process by displaying the Showwcase icon directly on a user's Twitter profile if they have a corresponding profile on Showwcase.com. Effortlessly explore new connections and discover exciting content on Showwcase.
+</p>
+ <a href="https://github.com/nomandhoni-cs/Showwand" target="_blank">
+    <img src="https://project-assets.showwcase.com/57949/1685078711306-Create%2520Post%2520(1200%2520%25C3%2597%2520675%2520px)%2520(2).webp" width='100%' alt="User Interface ( UI ) - Showwand" />
+</a>
+<h3 align="left">
+   Worth Sharing? Select it, Post it:
+</h3>
+<p align="left">
+Found something valuable to share with the developer community? With Showwand, simply select the content you want to share and post it instantly. No more copy-pasting or switching between platforms. Showwand streamlines the process, allowing you to quickly and conveniently share your insights, tips, or resources with fellow developers, fostering collaboration and knowledge exchange.
+</p>
+ <a href="https://github.com/nomandhoni-cs/Showwand" target="_blank">
+    <img src="https://project-assets.showwcase.com/57949/1685089546461-Add%2520a%2520heading.webp" width='100%' alt="User Interface ( UI ) - Showwand" />
+</a>
