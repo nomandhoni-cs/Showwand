@@ -71,3 +71,19 @@ Found something valuable to share with the developer community? With Showwand, s
  <a href="https://github.com/nomandhoni-cs/Showwand" target="_blank">
     <img src="https://project-assets.showwcase.com/57949/1685089546461-Add%2520a%2520heading.webp" width='100%' alt="User Interface ( UI ) - Showwand" />
 </a>
+<h1 align="left">
+    How to install the Extension?
+</h1>
+<h2 align="left">
+    Step 1
+</h2>
+<p align="left">
+  Download the Extension <i>Showwand-0.13.0.zip</i> from <a href="https://github.com/nomandhoni-cs/Showwand/releases/download/0.13.0/Showwand-0.13.0.zip">here</a>
+  <a href="https://github.com/nomandhoni-cs/Showwand/releases/tag/0.13.0">[GitHub - Release]</a>
+</p>
+<h3 align="left">
+    OR
+</h3>
+<p align="left">
+  You can <i>clone</i> the repository from here <a href="https://github.com/nomandhoni-cs/Showwand">[Showwand - GitHub]</a>
+</p>
