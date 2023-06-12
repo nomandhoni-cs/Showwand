@@ -252,3 +252,14 @@ textarea::-webkit-scrollbar {
 .setting-block {
 	display: none;
 }
+#get-api{
+	font-size: 12px;
+	margin-left: 10px;
+	display: block;
+	margin-top: -30px;
+	padding: 15px 0;
+}
+#get-api a{
+	color: rgb(0, 140, 255);
+	text-decoration: none;
+}
