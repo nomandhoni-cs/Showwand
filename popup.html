@@ -11,6 +11,12 @@
 
 <body>
     <div id="user-not-loggedin">
+        <nav>
+            <div class="logo-and-name">
+                <img src="assets/icon48.png" alt="Showwand Logo" class="logo">
+                <h1>Showwand</h1>
+            </div>
+        </nav>
         <div class="modal" id="api-key-modal">
             <div class="modal-content">
                 <h2>Enter your Showwcase info</h2>
@@ -20,9 +26,6 @@
                     <span id="get-api">Get your <a href="https://www.showwcase.com/settings/api-keys"
                             target="_blank">API
                             Key</a> from here.</span>
-                    <label for="api-username-input">Username</label>
-                    <input type="text" name="api-username" id="api-username-input" placeholder="Username (Optional)"
-                        required>
                     <button type="submit" id="save-api-key-btn" class="common-btn">
                         <svg class="paper-plane" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
                             fill="currentColor" aria-hidden="true">
@@ -49,7 +52,7 @@
                                 fill="#dedede"></path>
                         </g>
                     </svg>
-                    Create Post
+                    Create
                 </div>
                 <div id="posts-list-btn" class="all-nav-btn">
                     <svg viewBox="0 -0.5 21 21" version="1.1" xmlns="http://www.w3.org/2000/svg"
@@ -72,7 +75,7 @@
                             </g>
                         </g>
                     </svg>
-                    Post Lists
+                    Posts
                 </div>
                 <div id="setting-btn" class="all-nav-btn">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#fff">
@@ -90,13 +93,13 @@
                                 fill="#0F1729"></path>
                         </g>
                     </svg>
-                    Settings
+                    Profile
                 </div>
             </div>
         </nav>
         <div class="content">
             <div class="block create-post-block">
-                <textarea name="title" maxlength="80" id="post-title" placeholder="Write your Title here"></textarea>
+                <textarea name="title" maxlength="80" id="post-title" placeholder="Write your Title here (Optional)"></textarea>
                 <br>
                 <textarea name="post-de" id="post-description"
                     placeholder="Start a discussion with the community"></textarea>
@@ -121,6 +124,9 @@
             </div>
             <div class="block setting-block">
                 <!-- Modal to enter API key -->
+                <button id="log-out">
+                    Log Out
+                </button>
 
             </div>
         </div>

@@ -268,7 +268,14 @@ textarea::-webkit-scrollbar {
 #user-loggedin{
 	display: none;
 }
-
-/* #user-not-loggedin{
-	display: block;
-} */
+ /* User not Logged in Screen  */
+#user-not-loggedin{
+	padding: 10px;
+}
+.logo-and-name{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	margin-bottom: 20px;
+}
