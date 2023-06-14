@@ -38,54 +38,75 @@ function removeUserInfo() {
   });
 }
 
-chrome.storage.local.get(["showwcase-api-key", "userInfo"], function (data) {
-  if (data["showwcase-api-key"] && data["userInfo"]) {
-    document.getElementById("user-loggedin").style.display = "block";
-    document.getElementById("user-not-loggedin").style.display = "none";
-    const userLogout = document.getElementById("logout-btn");
-    userLogout.addEventListener("click", () => {
-      chrome.storage.local.remove(
-        ["showwcase-api-key", "userInfo"],
-        function () {
-          // window.location.reload();
-          document.getElementById("user-loggedin").style.display = "none";
-          document.getElementById("user-not-loggedin").style.display = "block";
-        }
-      );
-    });
-  } else {
-    document.getElementById("user-loggedin").style.display = "none";
-    document.getElementById("user-not-loggedin").style.display = "block";
-    // Form submit event listener
-    form.addEventListener("submit", (event) => {
-      event.preventDefault(); // Prevent form submission
-      const apiKeyInput = document.getElementById("api-key-input");
-      const apiKey = apiKeyInput.value;
-      console.log("API Key:", apiKey);
-      // Save API key to Chrome storage
-      chrome.storage.local.set({ "showwcase-api-key": apiKey }, function () {
-        // Change the text to submitted but not change the svg icon in the btn
-        formSubmitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
-        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
-        </svg> Submitted!`;
-        // Change the text back to submit after 3 seconds
-        setTimeout(() => {
-          formSubmitBtn.innerHTML = `<svg class="paper-plane" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
-          aria-hidden="true">
-          <path
-          d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
-        </path>
-      </svg> Submit`;
-        }, 2000);
-        console.log("API key saved to Chrome storage");
-        fetchUserInfo(apiKey);
-        document.getElementById("user-loggedin").style.display = "block";
-        document.getElementById("user-not-loggedin").style.display = "none";
-      });
-    });
-  }
-});
+chrome.storage.local.get(
+  ["showwcase-api-key", "userInfo"],
+  async function (data) {
+    if (data["showwcase-api-key"] && data["userInfo"]) {
+      displayAuthenticatedBlock();
+    } else {
+      document.getElementById("user-loggedin").style.display = "none";
+      document.getElementById("user-not-loggedin").style.display = "block";
+      // Form submit event listener
+      form.addEventListener("submit", async (event) => {
+        event.preventDefault(); // Prevent form submission
+        const apiKeyInput = document.getElementById("api-key-input");
+        const apiKey = apiKeyInput.value;
+        console.log("API Key:", apiKey);
 
+        try {
+          // Save API key to Chrome storage
+          await new Promise((resolve) => {
+            chrome.storage.local.set({ "showwcase-api-key": apiKey }, resolve);
+          });
+
+          // Change the text to submitted but not change the svg icon in the btn
+          formSubmitBtn.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+          <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+        </svg> Submitted!`;
+
+          // Fetch user info
+          const userInfo = await fetchUserInfo(apiKey);
+
+          // Save user info to Chrome storage
+          // Save user info to Chrome storage
+          await new Promise((resolve) => {
+            const userInfoJson = JSON.stringify(userInfo);
+            chrome.storage.local.set({ userInfo: userInfoJson }, resolve);
+          });
+
+          // Change the text back to submit after 3 seconds
+          setTimeout(() => {
+            formSubmitBtn.innerHTML = `<svg class="paper-plane" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+            aria-hidden="true">
+            <path
+              d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z">
+            </path>
+          </svg> Submit`;
+          }, 2000);
+
+          console.log("API key and user info saved to Chrome storage");
+
+          displayAuthenticatedBlock();
+        } catch (error) {
+          console.log("Error:", error);
+        }
+      });
+    }
+  }
+);
+
+function displayAuthenticatedBlock() {
+  document.getElementById("user-loggedin").style.display = "block";
+  document.getElementById("user-not-loggedin").style.display = "none";
+  const userLogout = document.getElementById("logout-btn");
+  userLogout.addEventListener("click", () => {
+    chrome.storage.local.remove(["showwcase-api-key", "userInfo"], function () {
+      // window.location.reload();
+      document.getElementById("user-loggedin").style.display = "none";
+      document.getElementById("user-not-loggedin").style.display = "block";
+    });
+  });
+}
 
 async function getCurrentUrl() {
   return new Promise((resolve, reject) => {
@@ -98,9 +119,8 @@ async function getCurrentUrl() {
     });
   });
 }
-// Fetch user info function from Notification
 function fetchUserInfo(apiKey) {
-  fetch("https://cache.showwcase.com/auth", {
+  return fetch("https://cache.showwcase.com/auth", {
     headers: {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
@@ -114,7 +134,7 @@ function fetchUserInfo(apiKey) {
     })
     .then((data) => {
       if (data) {
-        // Save user info to chrome storage and add two thing showwcase-api-key and isAuthorized 
+        return data; // Return the user info
       }
     })
     .catch((error) => {
