@@ -549,8 +549,6 @@ async function loadProfileInfo() {
   userLogout.addEventListener("click", () => {
     chrome.storage.local.remove(["showwcase-api-key", "userInfo"], function () {
       window.location.reload();
-      // document.getElementById("user-loggedin").style.display = "none";
-      // document.getElementById("user-not-loggedin").style.display = "block";
     });
   });
 }
