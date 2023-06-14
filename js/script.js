@@ -25,6 +25,18 @@ async function getAuthorizedUserInfo() {
   });
 }
 
+async function getCurrentUrl() {
+  return new Promise((resolve, reject) => {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      if (tabs.length === 0) {
+        reject("No active tabs found.");
+      } else {
+        resolve(tabs[0].url);
+      }
+    });
+  });
+}
+
 // Remove API key from Chrome storage
 function removeAPIKey() {
   chrome.storage.local.remove("showwcase-api-key", function () {
@@ -52,7 +64,6 @@ chrome.storage.local.get(
         const apiKeyInput = document.getElementById("api-key-input");
         const apiKey = apiKeyInput.value;
         console.log("API Key:", apiKey);
-
         try {
           // Save API key to Chrome storage
           await new Promise((resolve) => {
@@ -64,11 +75,8 @@ chrome.storage.local.get(
           <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0zm-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
         </svg> Submitted!`;
 
-          // Fetch user info
+          // Fetch user info and save to Chrome storage
           const userInfo = await fetchUserInfo(apiKey);
-
-          // Save user info to Chrome storage
-          // Save user info to Chrome storage
           await new Promise((resolve) => {
             const userInfoJson = JSON.stringify(userInfo);
             chrome.storage.local.set({ userInfo: userInfoJson }, resolve);
@@ -101,24 +109,12 @@ function displayAuthenticatedBlock() {
   const userLogout = document.getElementById("logout-btn");
   userLogout.addEventListener("click", () => {
     chrome.storage.local.remove(["showwcase-api-key", "userInfo"], function () {
-      // window.location.reload();
       document.getElementById("user-loggedin").style.display = "none";
       document.getElementById("user-not-loggedin").style.display = "block";
     });
   });
 }
 
-async function getCurrentUrl() {
-  return new Promise((resolve, reject) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      if (tabs.length === 0) {
-        reject("No active tabs found.");
-      } else {
-        resolve(tabs[0].url);
-      }
-    });
-  });
-}
 function fetchUserInfo(apiKey) {
   return fetch("https://cache.showwcase.com/auth", {
     headers: {
@@ -134,7 +130,7 @@ function fetchUserInfo(apiKey) {
     })
     .then((data) => {
       if (data) {
-        return data; // Return the user info
+        return data;
       }
     })
     .catch((error) => {
