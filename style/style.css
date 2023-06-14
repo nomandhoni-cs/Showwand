@@ -549,3 +549,21 @@ textarea::-webkit-scrollbar {
 		fill: #fff;
 	}
 }
+.footer-logo-and-name{
+	margin-top: 40px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.footer-logo-and-name span{
+	font-size: 28px;
+	font-weight: bold;
+	margin-left: 10px;
+}
+.footer-logo-and-name a{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-decoration: none;
+	color: #fff;
+}
