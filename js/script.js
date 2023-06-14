@@ -306,7 +306,30 @@ async function fetchPostsList() {
                       ? `<img src="${post.images[0]}" />`
                       : ""
                   }
-							</div>
+							  </div>
+                ${
+                  post.linkPreviewMeta?.url && post.linkPreviewMeta?.title
+                    ? `<div class="link-preview">
+                  <a href="${
+                    post.linkPreviewMeta && post.linkPreviewMeta.url
+                      ? post.linkPreviewMeta.url
+                      : ""
+                  }" target="_blank">
+                ${
+                  post.linkPreviewMeta && post.linkPreviewMeta.title
+                    ? `<div class="link-preview-title">${post.linkPreviewMeta.title}</div>`
+                    : ""
+                }
+                ${
+                  post.linkPreviewMeta && post.linkPreviewMeta.favicon
+                    ? `<div class="link-preview-img"><img src="${post.linkPreviewMeta.favicon}" /></div>`
+                    : ""
+                }
+                </a>
+                  </div>
+              `
+                    : ""
+                }
 							</div>
 							<div class="boost-post-btn">
 								<svg class="boost-post-svg" post-id="${post.id}" id="svg-${
@@ -390,6 +413,30 @@ async function fetchFeeds() {
                       : ""
                   }
 							</div>
+              ${
+                post.linkPreviewMeta?.url && post.linkPreviewMeta?.title
+                  ? `<div class="link-preview">
+                  <a href="${
+                    post.linkPreviewMeta && post.linkPreviewMeta.url
+                      ? post.linkPreviewMeta.url
+                      : ""
+                  }" target="_blank">
+                ${
+                  post.linkPreviewMeta && post.linkPreviewMeta.title
+                    ? `<div class="link-preview-title">${post.linkPreviewMeta.title}</div>`
+                    : ""
+                }
+                ${
+                  post.linkPreviewMeta && post.linkPreviewMeta.favicon
+                    ? `<div class="link-preview-img"><img src="${post.linkPreviewMeta.favicon}" /></div>`
+                    : ""
+                }
+                </a>
+                  </div>
+              `
+                  : ""
+              }
+
               </div>
 							<div class="boost-post-btn">
 								<svg class="boost-post-svg" post-id="${post.id}" id="svg-${
@@ -480,10 +527,10 @@ async function loadProfileInfo() {
   </a>
   </div>
 `;
-if (!isProfileLoaded){
-  profileContainer.insertAdjacentHTML("beforeend", profileSceleton);
-  isProfileLoaded = true;
-}
+  if (!isProfileLoaded) {
+    profileContainer.insertAdjacentHTML("beforeend", profileSceleton);
+    isProfileLoaded = true;
+  }
   const userLogout = document.getElementById("logout-btn");
   userLogout.addEventListener("click", () => {
     chrome.storage.local.remove(["showwcase-api-key", "userInfo"], function () {
