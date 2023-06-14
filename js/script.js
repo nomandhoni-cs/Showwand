@@ -392,7 +392,7 @@ async function fetchFeeds() {
     })
     .then((data) => {
       const posts = data;
-      if (!isPostLoaded) {
+      if (!isFeedLoaded) {
         posts.forEach((post) => {
           console.log(post);
           const boostedByArray = post.boostedBy;
@@ -490,7 +490,6 @@ async function fetchFeeds() {
 async function loadProfileInfo() {
   const profileContainer = document.getElementById("profile-container");
   const authorizedUserInfo = await getAuthorizedUserInfo();
-  // const token = authorizedUserInfo.token;
   const username = authorizedUserInfo.username;
   const profilePictureUrl = authorizedUserInfo.profilePictureKey;
   const profileName = authorizedUserInfo.displayName;
