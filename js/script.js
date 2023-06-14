@@ -6,6 +6,7 @@ const feedsBtn = document.getElementById("feeds-btn");
 const form = document.getElementById("api-username-form");
 const formSubmitBtn = document.getElementById("save-api-key-btn");
 let isPostLoaded = false;
+let isFeedLoaded = false;
 
 async function getAPIKey() {
   return new Promise((resolve) => {
@@ -274,10 +275,6 @@ async function fetchPostsList() {
   const postsList = document.getElementById("posts-list");
   const authorizedUserInfo = await getAuthorizedUserInfo();
   const username = authorizedUserInfo.username;
-  console.log(
-    `https://cache.showwcase.com/threads/?username=${username}&limit=15`
-  );
-
   fetch(`https://cache.showwcase.com/threads/?username=${username}&limit=15`)
     .then((response) => {
       if (!response.ok) {
@@ -343,6 +340,81 @@ async function fetchPostsList() {
     });
 }
 
+// Fetch feeds and display them in the id="feeds-list" div
+async function fetchFeeds() {
+    const feedsList = document.getElementById("feeds-list");
+    const authorizedUserInfo = await getAuthorizedUserInfo();
+    const token = authorizedUserInfo.token;
+    const username = authorizedUserInfo.username;
+    fetch(`https://cache.showwcase.com/feeds/discover?limit=15`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token,
+      },
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        const posts = data;
+        if (!isPostLoaded) {
+          posts.forEach((post) => {
+            console.log(post);
+            const boostedByArray = post.boostedBy;
+            const boostedByArrayLength = boostedByArray.length;
+            let isBoostedByUser = false;
+            for (let i = 0; i < boostedByArray.length; i++) {
+              const user = boostedByArray[i];
+              if (user.username === username) {
+                isBoostedByUser = true;
+                break;
+              }
+            }
+            // Insert every post message into the feedsList div
+            const postMessage = `
+						<div class="single-post">
+							<div class="profile-img"><img src="${post.user.profilePictureUrl}"></div>
+							<div class="post-content">
+								<a href="https://www.showwcase.com/thread/${post.id}" target="_blank">
+									<h2 class="post-title">${post.title ? post.title : ""}</h2>
+									<p class="post-message">${post.message}</p>
+								</a>
+							</div>
+							<div class="boost-post-btn">
+								<svg class="boost-post-svg" post-id="${post.id}" id="svg-${
+              post.id
+            }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="${
+              isBoostedByUser ? "#27ae60" : "currentColor"
+            }" aria-hidden="true">
+									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
+								</svg>
+								<span id="boost-count-${
+                  post.id
+                }" class="boost-count">${boostedByArrayLength}</span>
+							</div>
+						</div>`;
+
+            feedsList.insertAdjacentHTML("beforeend", postMessage);
+            document
+              .getElementById("svg-" + post.id)
+              .addEventListener("click", () => {
+                addBoostEventListener(
+                  post.id,
+                  isBoostedByUser,
+                  boostedByArrayLength
+                );
+              });
+          });
+          isFeedLoaded = true;
+        }
+      })
+      .catch((error) => {
+        console.error("There was a problem with the fetch operation:", error);
+      });
+}
 createPostBtn.addEventListener("click", () => {
   renderBlock(0);
   addActiveClass(0);
@@ -357,6 +429,7 @@ postsListBtn.addEventListener("click", () => {
 feedsBtn.addEventListener("click", () => {
   renderBlock(2);
   addActiveClass(2);
+  fetchFeeds();
 });
 
 profileBtn.addEventListener("click", () => {
