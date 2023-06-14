@@ -13,7 +13,7 @@ const usernameInputOptionsPage = document.getElementById(
 );
 // Fetch user info function from Notification
 function fetchUserInfo(apiKey) {
-  fetch("https://cache.showwcase.com/notifications", {
+  fetch("https://cache.showwcase.com/auth", {
     headers: {
       "Content-Type": "application/json",
       "x-api-key": apiKey,
@@ -26,10 +26,12 @@ function fetchUserInfo(apiKey) {
       return response.json();
     })
     .then((data) => {
-      if (data[0].data.thread) {
-        const user = data[0].data.thread.user;
-        const userJson = JSON.stringify(user);
-        chrome.storage.local.set({ userInfo: userJson });
+      if (data) {
+        // Save user info to chrome storage
+        const userJson = JSON.stringify(data);
+        chrome.storage.local.set({ userInfo: userJson }, function () {
+          console.log("User info saved to Chrome storage");
+        });
       }
     })
     .catch((error) => {
@@ -39,13 +41,8 @@ function fetchUserInfo(apiKey) {
 // Form submit event listener
 formInOptionsPage.addEventListener("submit", (event) => {
   event.preventDefault(); // Prevent form submission
-
   const apiKey = apiKeyInputOptionsPage.value;
-  const username = usernameInputOptionsPage.value;
-
   console.log("API Key:", apiKey);
-  console.log("Username:", username);
-
   // Save API key to Chrome storage
   chrome.storage.local.set({ "showwcase-api-key": apiKey }, function () {
     // Change the text to submitted but not change the svg icon in the btn
@@ -64,10 +61,6 @@ formInOptionsPage.addEventListener("submit", (event) => {
     console.log("API key saved to Chrome storage");
   });
 
-  // Save username to Chrome storage
-  chrome.storage.local.set({ "showwcase-username": username }, function () {
-    console.log("Username saved to Chrome storage");
-  });
   chrome.storage.local.get(["userInfo"], function (result) {
     if (!result.userInfo) {
       fetchUserInfo(apiKey);
@@ -79,13 +72,6 @@ formInOptionsPage.addEventListener("submit", (event) => {
 chrome.storage.local.get("showwcase-api-key", function (data) {
   if (data["showwcase-api-key"]) {
     apiKeyInputOptionsPage.value = data["showwcase-api-key"];
-  }
-});
-
-// Retrieve username from Chrome storage
-chrome.storage.local.get("showwcase-username", function (data) {
-  if (data["showwcase-username"]) {
-    usernameInputOptionsPage.value = data["showwcase-username"];
   }
 });
 //! Options Page JS END
