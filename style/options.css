@@ -21,7 +21,7 @@ body {
 }
 
 .modal-content {
-  width: 400px;
+  width: 500px;
   padding: 30px;
   background-color: #171718;
   border-radius: 10px;
@@ -91,4 +91,8 @@ form#api-username-form-options-page {
 .modal-content button[type="submit"] {
   align-self: flex-start;
 
+}
+#get-api a{
+  color: rgb(0, 110, 255);
+  text-decoration: none;
 }
