@@ -284,7 +284,7 @@ textarea::-webkit-scrollbar {
 
 .posts-block h3 {
 	text-align: center;
-	font-size: 25px;
+	font-size: 22px;
 	padding-bottom: 20px;
 }
 
@@ -366,6 +366,96 @@ textarea::-webkit-scrollbar {
 }
 .feeds-block h3 {
 	text-align: center;
-	font-size: 25px;
+	font-size: 22px;
 	padding-bottom: 20px;
+}
+/* Feeds End  */
+
+/* Profile Start  */
+.profile-container{
+	width: 90%;
+	margin: 0 auto;
+}
+.profile-header {
+	width: 85%;
+	margin: 0 auto;
+	background-color: #2e2e2f;
+	border-radius: 10px;
+	padding: 20px;
+	display: flex;
+	align-items: center;
+}
+
+.profile-image {
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	overflow: hidden;
+}
+
+.profile-image img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+.name-username {
+	margin-left: 20px;
+}
+
+.profile-name {
+	font-size: 18px;
+	font-weight: bold;
+	margin: 0;
+}
+
+.profile-username {
+	font-size: 14px;
+	color: #888;
+}
+
+.username-slice {
+	font-weight: bold;
+}
+
+#logout-btn {
+	margin-left: auto;
+	border: none;
+	background-color: transparent;
+	cursor: pointer;
+	color: #fff;
+}
+
+#logout-btn svg {
+	width: 16px;
+	height: 16px;
+}
+.profile-bio{
+	text-align: center;
+	width: 90%;
+	display: block;
+	margin: 10px auto;
+}
+.profile-stats {
+	width: 95%;
+	margin: 0 auto;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+
+.profile-stats-item {
+	width: 49%;
+	height: 50px;
+	background-color: #2e2e2f;
+	border-radius: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 10px;
+}
+
+.profile-stats-item-value {
+	font-weight: bold;
+	margin-left: 5px;
 }

@@ -7,6 +7,7 @@ const form = document.getElementById("api-username-form");
 const formSubmitBtn = document.getElementById("save-api-key-btn");
 let isPostLoaded = false;
 let isFeedLoaded = false;
+let isProfileLoaded = false;
 
 async function getAPIKey() {
   return new Promise((resolve) => {
@@ -108,13 +109,6 @@ chrome.storage.local.get(
 function displayAuthenticatedBlock() {
   document.getElementById("user-loggedin").style.display = "block";
   document.getElementById("user-not-loggedin").style.display = "none";
-  const userLogout = document.getElementById("logout-btn");
-  userLogout.addEventListener("click", () => {
-    chrome.storage.local.remove(["showwcase-api-key", "userInfo"], function () {
-      document.getElementById("user-loggedin").style.display = "none";
-      document.getElementById("user-not-loggedin").style.display = "block";
-    });
-  });
 }
 
 function fetchUserInfo(apiKey) {
@@ -342,39 +336,39 @@ async function fetchPostsList() {
 
 // Fetch feeds and display them in the id="feeds-list" div
 async function fetchFeeds() {
-    const feedsList = document.getElementById("feeds-list");
-    const authorizedUserInfo = await getAuthorizedUserInfo();
-    const token = authorizedUserInfo.token;
-    const username = authorizedUserInfo.username;
-    fetch(`https://cache.showwcase.com/feeds/discover?limit=15`, {
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: token,
-      },
+  const feedsList = document.getElementById("feeds-list");
+  const authorizedUserInfo = await getAuthorizedUserInfo();
+  const token = authorizedUserInfo.token;
+  const username = authorizedUserInfo.username;
+  fetch(`https://cache.showwcase.com/feeds/discover?limit=15`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: token,
+    },
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json();
     })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        const posts = data;
-        if (!isPostLoaded) {
-          posts.forEach((post) => {
-            console.log(post);
-            const boostedByArray = post.boostedBy;
-            const boostedByArrayLength = boostedByArray.length;
-            let isBoostedByUser = false;
-            for (let i = 0; i < boostedByArray.length; i++) {
-              const user = boostedByArray[i];
-              if (user.username === username) {
-                isBoostedByUser = true;
-                break;
-              }
+    .then((data) => {
+      const posts = data;
+      if (!isPostLoaded) {
+        posts.forEach((post) => {
+          console.log(post);
+          const boostedByArray = post.boostedBy;
+          const boostedByArrayLength = boostedByArray.length;
+          let isBoostedByUser = false;
+          for (let i = 0; i < boostedByArray.length; i++) {
+            const user = boostedByArray[i];
+            if (user.username === username) {
+              isBoostedByUser = true;
+              break;
             }
-            // Insert every post message into the feedsList div
-            const postMessage = `
+          }
+          // Insert every post message into the feedsList div
+          const postMessage = `
 						<div class="single-post">
 							<div class="profile-img"><img src="${post.user.profilePictureUrl}"></div>
 							<div class="post-content">
@@ -385,10 +379,10 @@ async function fetchFeeds() {
 							</div>
 							<div class="boost-post-btn">
 								<svg class="boost-post-svg" post-id="${post.id}" id="svg-${
-              post.id
-            }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="${
-              isBoostedByUser ? "#27ae60" : "currentColor"
-            }" aria-hidden="true">
+            post.id
+          }" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="${
+            isBoostedByUser ? "#27ae60" : "currentColor"
+          }" aria-hidden="true">
 									<path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd"></path>
 								</svg>
 								<span id="boost-count-${
@@ -397,23 +391,77 @@ async function fetchFeeds() {
 							</div>
 						</div>`;
 
-            feedsList.insertAdjacentHTML("beforeend", postMessage);
-            document
-              .getElementById("svg-" + post.id)
-              .addEventListener("click", () => {
-                addBoostEventListener(
-                  post.id,
-                  isBoostedByUser,
-                  boostedByArrayLength
-                );
-              });
-          });
-          isFeedLoaded = true;
-        }
-      })
-      .catch((error) => {
-        console.error("There was a problem with the fetch operation:", error);
-      });
+          feedsList.insertAdjacentHTML("beforeend", postMessage);
+          document
+            .getElementById("svg-" + post.id)
+            .addEventListener("click", () => {
+              addBoostEventListener(
+                post.id,
+                isBoostedByUser,
+                boostedByArrayLength
+              );
+            });
+        });
+        isFeedLoaded = true;
+      }
+    })
+    .catch((error) => {
+      console.error("There was a problem with the fetch operation:", error);
+    });
+}
+
+// Load Profile info
+async function loadProfileInfo() {
+  const profileContainer = document.getElementById("profile-container");
+  const authorizedUserInfo = await getAuthorizedUserInfo();
+  // const token = authorizedUserInfo.token;
+  const username = authorizedUserInfo.username;
+  const profilePictureUrl = authorizedUserInfo.profilePictureKey;
+  const profileName = authorizedUserInfo.displayName;
+  const profileBio = authorizedUserInfo.headline;
+  const followers = authorizedUserInfo.totalFollowers;
+  const following = authorizedUserInfo.totalFollowing;
+  const threads = authorizedUserInfo.totalThreads;
+  const shows = authorizedUserInfo.engagement.totalPublishedShows;
+  const profileHeaderSceleton = `<div class="profile-header">
+  <div class="profile-image">
+    <img src="${profilePictureUrl}" alt="">
+  </div>
+  <div class="name-username">
+    <h3 class="profile-name">${profileName}</h3>
+    <span class="profile-username">@<span class="username-slice">${username}</span></span>
+  </div>
+  <button id="logout-btn">
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+      <path fill-rule="evenodd"
+        d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+      <path fill-rule="evenodd"
+        d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+    </svg>
+  </button>
+</div>
+<span class="profile-bio">
+  ${profileBio}
+</span>
+<div class="profile-stats">
+  <div class="profile-stats-item">Followers: <span class="profile-stats-item-value">${followers}</span></div>
+  <div class="profile-stats-item">Following: <span class="profile-stats-item-value">${following}</span></div>
+  <div class="profile-stats-item">Threads: <span class="profile-stats-item-value">${threads}</span></div>
+  <div class="profile-stats-item">Shows: <span class="profile-stats-item-value">${shows}</span></div>
+</div>
+`;
+if (!isProfileLoaded){
+  profileContainer.insertAdjacentHTML("beforeend", profileHeaderSceleton);
+  isProfileLoaded = true;
+}
+  const userLogout = document.getElementById("logout-btn");
+  userLogout.addEventListener("click", () => {
+    chrome.storage.local.remove(["showwcase-api-key", "userInfo"], function () {
+      window.location.reload();
+      // document.getElementById("user-loggedin").style.display = "none";
+      // document.getElementById("user-not-loggedin").style.display = "block";
+    });
+  });
 }
 createPostBtn.addEventListener("click", () => {
   renderBlock(0);
@@ -435,4 +483,5 @@ feedsBtn.addEventListener("click", () => {
 profileBtn.addEventListener("click", () => {
   renderBlock(3);
   addActiveClass(3);
+  loadProfileInfo();
 });
