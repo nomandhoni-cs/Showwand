@@ -1,7 +1,8 @@
 const postBtn = document.getElementById("post-submit-btn");
 const createPostBtn = document.getElementById("create-post-btn");
 const postsListBtn = document.getElementById("posts-list-btn");
-const settingBtn = document.getElementById("setting-btn");
+const profileBtn = document.getElementById("profile-btn");
+const feedsBtn = document.getElementById("feeds-btn");
 const form = document.getElementById("api-username-form");
 const formSubmitBtn = document.getElementById("save-api-key-btn");
 let isPostLoaded = false;
@@ -353,7 +354,12 @@ postsListBtn.addEventListener("click", () => {
   fetchPostsList();
 });
 
-settingBtn.addEventListener("click", () => {
+feedsBtn.addEventListener("click", () => {
   renderBlock(2);
   addActiveClass(2);
+});
+
+profileBtn.addEventListener("click", () => {
+  renderBlock(3);
+  addActiveClass(3);
 });
