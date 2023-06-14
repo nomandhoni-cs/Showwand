@@ -314,7 +314,6 @@ textarea::-webkit-scrollbar {
 	text-decoration: none;
 }
 
-
 #user-loggedin {
 	display: none;
 }
@@ -345,6 +344,12 @@ textarea::-webkit-scrollbar {
 }
 
 /* Feeds start*/
+.post-img img{
+	width: 100%;
+	margin: 10px auto;
+	border-radius: 7px;
+	margin-bottom: 10px;
+}
 #feeds-list {
 	padding: 0 7px;
 	height: 450px;

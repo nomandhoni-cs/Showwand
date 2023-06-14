@@ -300,6 +300,13 @@ async function fetchPostsList() {
 									<h2 class="post-title">${post.title ? post.title : ""}</h2>
 									<p class="post-message">${post.message}</p>
 								</a>
+                <div class="post-img">
+                  ${
+                    post.images && post.images.length > 0
+                      ? `<img src="${post.images[0]}" />`
+                      : ""
+                  }
+							</div>
 							</div>
 							<div class="boost-post-btn">
 								<svg class="boost-post-svg" post-id="${post.id}" id="svg-${
@@ -376,7 +383,14 @@ async function fetchFeeds() {
 									<h2 class="post-title">${post.title ? post.title : ""}</h2>
 									<p class="post-message">${post.message}</p>
 								</a>
+              <div class="post-img">
+                  ${
+                    post.images && post.images.length > 0
+                      ? `<img src="${post.images[0]}" />`
+                      : ""
+                  }
 							</div>
+              </div>
 							<div class="boost-post-btn">
 								<svg class="boost-post-svg" post-id="${post.id}" id="svg-${
             post.id
