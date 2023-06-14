@@ -309,7 +309,14 @@ async function fetchPostsList() {
 							  </div>
                 ${
                   post.linkPreviewMeta?.url && post.linkPreviewMeta?.title
-                    ? `<div class="link-preview">
+                    ? `<div class="link-preview-container">
+                    ${
+                      post.linkPreviewMeta &&
+                      post.linkPreviewMeta.images.length > 0
+                        ? `<div class="link-preview-thubmanail"><img src="${post.linkPreviewMeta.images[0]}" /></div>`
+                        : ""
+                    }
+                    <div class="link-preview-content">
                   <a href="${
                     post.linkPreviewMeta && post.linkPreviewMeta.url
                       ? post.linkPreviewMeta.url
@@ -326,6 +333,7 @@ async function fetchPostsList() {
                     : ""
                 }
                 </a>
+                </div>
                   </div>
               `
                     : ""
@@ -415,7 +423,14 @@ async function fetchFeeds() {
 							</div>
               ${
                 post.linkPreviewMeta?.url && post.linkPreviewMeta?.title
-                  ? `<div class="link-preview">
+                  ? `<div class="link-preview-container">
+                    ${
+                      post.linkPreviewMeta &&
+                      post.linkPreviewMeta.images.length > 0
+                        ? `<div class="link-preview-thubmanail"><img src="${post.linkPreviewMeta.images[0]}" /></div>`
+                        : ""
+                    }
+                    <div class="link-preview-content">
                   <a href="${
                     post.linkPreviewMeta && post.linkPreviewMeta.url
                       ? post.linkPreviewMeta.url
@@ -432,12 +447,12 @@ async function fetchFeeds() {
                     : ""
                 }
                 </a>
+                </div>
                   </div>
               `
                   : ""
               }
-
-              </div>
+							</div>
 							<div class="boost-post-btn">
 								<svg class="boost-post-svg" post-id="${post.id}" id="svg-${
             post.id

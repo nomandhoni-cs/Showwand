@@ -351,26 +351,41 @@ textarea::-webkit-scrollbar {
 	margin-bottom: 10px;
 }
 
-.link-preview {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	margin: 10px 0;
+.link-preview-container {
 	background-color: #202021;
+	margin: 10px 0;
 	padding: 10px;
 	border-radius: 7px;
 }
 
-.link-preview a {
+.link-preview-content {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.link-preview-content a {
 	text-decoration: none;
 	color: #00a2e9;
 	display: flex;
 	align-items: center;
 	width: 100%;
 }
-.link-preview-title{
+
+.link-preview-title {
 	width: 75%;
 
+}
+
+.link-preview-thubmanail {
+	display: block;
+}
+
+.link-preview-thubmanail img {
+	width: 100%;
+	height: auto;
+	border-radius: 7px;
+	margin-bottom: 10px;
 }
 
 .link-preview-img {
