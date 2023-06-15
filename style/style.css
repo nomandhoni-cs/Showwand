@@ -575,32 +575,33 @@ textarea::-webkit-scrollbar {
 	justify-content: center;
 	background-color: #fff;
 
-	& a {
-		color: #000;
-		font-weight: bold;
-		font-size: 16px;
-		margin: 0 10px;
-		text-decoration: none;
-	}
+}
 
-	& svg {
-		fill: #000;
-		width: 16px;
-		height: 16px;
-		margin-right: 5px;
-	}
+.resume-link a {
+	color: #000;
+	font-weight: bold;
+	font-size: 16px;
+	margin: 0 10px;
+	text-decoration: none;
+}
+
+.resume-link svg {
+	fill: #000;
+	width: 16px;
+	height: 16px;
+	margin-right: 5px;
 }
 
 .resume-link:hover {
 	background-color: transparent;
+}
 
-	& a {
-		color: #fff;
-	}
+.resume-link:hover a {
+	color: #fff;
+}
 
-	& svg {
-		fill: #fff;
-	}
+.resume-link:hover svg {
+	fill: #fff;
 }
 
 .footer-logo-and-name {

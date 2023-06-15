@@ -20,7 +20,7 @@
   "content_scripts": [
     {
       "js": ["js/content.js"],
-      "matches": ["https://twitter.com/*"]
+      "matches": ["https://twitter.com/*", "https://www.linkedin.com/in/*"]
     }
   ],
   "background": {
