@@ -93,4 +93,11 @@ Contributing to Showwand not only allows you to leave your mark on the project b
 We can't wait to see the amazing contributions you'll bring to Showwand and the positive impact they will have on the Showwcase experience.
 
 Join us on this exciting journey of open-source collaboration and help us shape Showwand into the best browser extension for Showwcase users worldwide!
+<br />
+<br />
+<a href="https://www.buymeacoffee.com/nomandhoni" target="_blank">
+<img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="height: 60px !important;width: 217px !important;" >
+</a>
+<br />
+<br />
 
